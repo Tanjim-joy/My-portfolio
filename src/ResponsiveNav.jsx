@@ -1,20 +1,25 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
-const navbar = () => {
+const ResponsiveNav = () => {
   const [activeSection, setActiveSection] = useState('about');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  // Check screen size on mount and resize
+  // Check screen size and update state
   useEffect(() => {
-    const handleResize = () => {
+    const checkScreenSize = () => {
       setIsMobile(window.innerWidth <= 768);
     };
     
-    handleResize(); // Initial check
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    // Initial check
+    checkScreenSize();
+    
+    // Add event listener
+    window.addEventListener('resize', checkScreenSize);
+    
+    // Cleanup
+    return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
   const scrollToSection = (sectionId) => {
@@ -22,7 +27,6 @@ const navbar = () => {
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
       setActiveSection(sectionId);
-      setIsMenuOpen(false);
     }
   };
 
@@ -42,18 +46,18 @@ const navbar = () => {
       <div style={{
         maxWidth: '1400px',
         margin: '0 auto',
-        padding: '0 1rem',
+        padding: '0 clamp(1rem, 4vw, 2rem)',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        height: '70px'
+        height: 'clamp(60px, 10vh, 80px)'
       }}>
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
           style={{
-            fontSize: '1.5rem',
+            fontSize: 'clamp(1.2rem, 4vw, 1.8rem)',
             fontWeight: 'bold',
             background: 'linear-gradient(90deg, #a855f7, #ec4899)',
             WebkitBackgroundClip: 'text',
@@ -64,10 +68,10 @@ const navbar = () => {
           Tangimul Haque
         </motion.div>
 
-        {/* Desktop Navigation - shown on larger screens */}
+        {/* Desktop Navigation - hidden on mobile */}
         <div style={{
           display: isMobile ? 'none' : 'flex',
-          gap: '1.5rem'
+          gap: 'clamp(1rem, 3vw, 2.5rem)'
         }}>
           {navItems.map((item) => (
             <motion.button
@@ -83,7 +87,7 @@ const navbar = () => {
                 paddingBottom: '4px',
                 color: activeSection === item ? '#a855f7' : '#cbd5e1',
                 fontWeight: activeSection === item ? '600' : '400',
-                fontSize: '1rem',
+                fontSize: 'clamp(0.9rem, 2.5vw, 1rem)',
                 cursor: 'pointer'
               }}
             >
@@ -109,7 +113,7 @@ const navbar = () => {
           ))}
         </div>
 
-        {/* Mobile Menu Button - shown on smaller screens */}
+        {/* Mobile Menu Button - hidden on desktop */}
         <motion.button
           whileTap={{ scale: 0.95 }}
           style={{
@@ -118,7 +122,7 @@ const navbar = () => {
             background: 'transparent',
             border: 'none',
             cursor: 'pointer',
-            padding: '0.5rem'
+            padding: '8px'
           }}
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
@@ -128,21 +132,21 @@ const navbar = () => {
         </motion.button>
       </div>
 
-      {/* Mobile Menu - shown when menu is open */}
-      {isMenuOpen && isMobile && (
+      {/* Mobile Menu - only shown on mobile when isMenuOpen is true */}
+      {isMobile && isMenuOpen && (
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
           style={{
-            background: 'rgba(15, 23, 42, 0.98)',
+            background: 'rgba(15, 23, 42, 0.95)',
             backdropFilter: 'blur(20px)',
             padding: '1rem',
             display: 'flex',
             flexDirection: 'column',
-            gap: '0.5rem',
+            gap: '1rem',
             position: 'absolute',
-            top: '70px',
+            top: 'clamp(60px, 10vh, 80px)',
             width: '100%',
             zIndex: 999,
             borderTop: '1px solid rgba(139, 92, 246, 0.3)'
@@ -151,7 +155,10 @@ const navbar = () => {
           {navItems.map((item) => (
             <motion.button
               key={item}
-              onClick={() => scrollToSection(item)}
+              onClick={() => {
+                scrollToSection(item);
+                setIsMenuOpen(false);
+              }}
               whileHover={{ x: 10 }}
               style={{
                 padding: '1rem',
@@ -174,4 +181,4 @@ const navbar = () => {
   );
 };
 
-export default navbar;
+export default ResponsiveNav;

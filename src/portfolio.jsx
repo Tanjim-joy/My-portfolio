@@ -28,7 +28,7 @@ const Portfolio = () => {
 
   const contaninerStyle = {
     display : 'grid', 
-    gridTemplateColumns: isMobile ? 'repeat(auto-fit, minmax(350px, 1fr))'  : 'repeat(auto-fit, minmax(650px, 1fr))' , 
+    gridTemplateColumns: isMobile ? 'repeat(auto-fit, minmax(350px, 1fr))'  : 'repeat(auto-fit, minmax(600px, 1fr))' , 
   }
 
   useEffect(() => {
@@ -224,11 +224,11 @@ const Portfolio = () => {
             Tangimul Haque
           </motion.div>
 
-          {/* Desktop Navigation */}
+          {/* Desktop Navigation - hidden on mobile */}
           <div style={{
-            display: 'flex',
+            display: isMobile ? 'none' : 'flex',
             gap: 'clamp(1rem, 3vw, 2.5rem)'
-          }} className="desktop-nav">
+          }}>
             {['about', 'experience', 'education', 'skills', 'contact'].map((item) => (
               <motion.button
                 key={item}
@@ -269,18 +269,18 @@ const Portfolio = () => {
             ))}
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Button - hidden on desktop */}
           <motion.button
             whileTap={{ scale: 0.95 }}
             style={{
-              display: 'none',
+              display: isMobile ? 'block' : 'none',
               color: 'white',
               background: 'transparent',
               border: 'none',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              padding: '8px'
             }}
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="mobile-nav"
           >
             <svg width="28" height="28" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
@@ -288,29 +288,33 @@ const Portfolio = () => {
           </motion.button>
         </div>
 
-        {/* Mobile Menu */}
-        {isMenuOpen && (
+        {/* Mobile Menu - only shown on mobile when isMenuOpen is true */}
+        {isMobile && isMenuOpen && (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
             style={{
-              background: 'rgba(15, 23, 42, 0.95)',
+              background: 'rgba(15, 23, 42, 0.98)',
               backdropFilter: 'blur(20px)',
               padding: '1rem',
               display: 'flex',
               flexDirection: 'column',
-              gap: '1rem',
+              gap: '0.5rem',
               position: 'absolute',
               top: 'clamp(60px, 10vh, 80px)',
               width: '100%',
-              zIndex: 999
+              zIndex: 999,
+              borderTop: '1px solid rgba(139, 92, 246, 0.3)'
             }}
           >
             {['about', 'experience', 'education', 'skills', 'contact'].map((item) => (
               <motion.button
                 key={item}
-                onClick={() => scrollToSection(item)}
+                onClick={() => {
+                  scrollToSection(item);
+                  setIsMenuOpen(false);
+                }}
                 whileHover={{ x: 10 }}
                 style={{
                   padding: '1rem',
@@ -320,7 +324,8 @@ const Portfolio = () => {
                   textTransform: 'capitalize',
                   fontSize: '1.1rem',
                   textAlign: 'left',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  borderRadius: '4px'
                 }}
               >
                 {item}
@@ -329,7 +334,6 @@ const Portfolio = () => {
           </motion.div>
         )}
       </nav>
-
       {/* Hero Section */}
       <section style={{
         padding: 'clamp(4rem, 15vh, 10rem) clamp(1rem, 4vw, 2rem) clamp(4rem, 10vh, 8rem)',
