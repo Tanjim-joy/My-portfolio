@@ -1,21 +1,13 @@
-
-import React, { useState, useEffect } from 'react';
-import { Database } from 'lucide-react';
+import React, { useState, useEffect, use } from 'react';
+import { Database, User, Briefcase, Code, GraduationCap, Mail, Phone, MapPin, Github, Linkedin, Calendar, Award, MessageSquare, ArrowRight, CheckCircle, Sparkles, Star, BookOpen, Trophy } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { 
-  User, Briefcase, Code, GraduationCap, Mail, Phone, MapPin, 
-  Github, Linkedin, ExternalLink, Calendar, Award, MessageSquare, 
-  ArrowRight, CheckCircle, Sparkles, Star, BookOpen, Trophy
-} from 'lucide-react';
 import profileImage from './assets/2.png'; // Adjust the path as necessary
-import { link } from 'framer-motion/client';
 
 const startdate = new Date(2023, 3, 11);
 const presentDate = new Date();
-
 const diffInMs = presentDate - startdate;
 const diffInDays = diffInMs / (1000 * 60 * 60 * 24 * 365.25);
-const years  = diffInDays.toFixed(1); 
+const years = diffInDays.toFixed(1);
 
 
 
@@ -23,21 +15,34 @@ const Portfolio = () => {
   const [activeSection, setActiveSection] = useState('about');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check screen size on mount and resize
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const contaninerStyle = {
+    display : 'grid', 
+    gridTemplateColumns: isMobile ? 'repeat(auto-fit, minmax(350px, 1fr))'  : 'repeat(auto-fit, minmax(650px, 1fr))' , 
+  }
 
   useEffect(() => {
     const handleMouseMove = (e) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
     };
-
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['about', 'experience','education', 'skills', 'contact'];
+      const sections = ['about', 'experience', 'education', 'skills', 'contact'];
       const scrollPosition = window.scrollY + 100;
-
       for (const section of sections) {
         const element = document.getElementById(section);
         if (element) {
@@ -50,7 +55,6 @@ const Portfolio = () => {
         }
       }
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -63,7 +67,7 @@ const Portfolio = () => {
     setIsMenuOpen(false);
   };
 
-const skills = [
+  const skills = [
     { name: 'HTML5', level: 95, category: 'Frontend' },
     { name: 'CSS3', level: 95, category: 'Frontend' },
     { name: 'Bootstrap', level: 95, category: 'Frontend' },
@@ -73,7 +77,7 @@ const skills = [
     { name: 'Redux', level: 50, category: 'Frontend' },
     { name: 'AJAX', level: 85, category: 'Frontend' },
     { name: 'JSON', level: 85, category: 'Frontend' },
-    { name: 'PHP', level: 85, category: 'Backend' }, // Merged PHP entries, averaged level
+    { name: 'PHP', level: 85, category: 'Backend' },
     { name: 'Node.js', level: 70, category: 'Backend' },
     { name: 'Express', level: 70, category: 'Backend' },
     { name: 'C#', level: 90, category: 'Backend' },
@@ -82,7 +86,7 @@ const skills = [
     { name: 'MySQL', level: 90, category: 'Database' },
     { name: 'SQL', level: 90, category: 'Database' },
     { name: 'Git', level: 88, category: 'DevOps' },
-    { name: 'Docker', level: 25, category: 'DevOps' }, // Added Docker with basic proficiency
+    { name: 'Docker', level: 25, category: 'DevOps' },
     { name: 'System Design & Architecture', level: 82, category: 'Architecture' },
     { name: 'Requirements Engineering', level: 90, category: 'Process' },
   ];
@@ -109,7 +113,7 @@ const skills = [
       period: '2022 - Present',
       description: 'Developed business-critical web applications supporting manufacturing operations with focus on scalability and efficiency.',
       achievements: [
-        'Implemented enterprise-level solutions using PHP,C# & .NET and database technologies',
+        'Implemented enterprise-level solutions using PHP, C# & .NET and database technologies',
         'Led API development projects integrating multiple internal systems',
         'Improved system performance by 40% through code optimization and database tuning'
       ],
@@ -118,11 +122,11 @@ const skills = [
   ];
 
   const education = [
-     {
+    {
       degree: 'Bachelor of Science in Computer Science & Engineering',
       institution: 'City University Bangladesh',
       period: '2018 - 2022',
-      grade: 'CGPA: 2.97/4.00',      
+      grade: 'CGPA: 2.97/4.00',
       type: 'undergraduate'
     },
     {
@@ -130,14 +134,13 @@ const skills = [
       institution: 'Institute of Information Technology Bogura',
       period: '2011 - 2015',
       grade: 'CGPA: 3.06/4.00',
-      
       type: 'Diploma'
     },
     {
-      degree: 'General Secondary Certificate  (Electrical)',
+      degree: 'General Secondary Certificate (Electrical)',
       institution: 'Technical Secondary School & College Chapainawabganj',
       period: '2010',
-      grade: 'GPA: 3.82/5.00',      
+      grade: 'GPA: 3.82/5.00',
       type: 'SSC'
     },
     {
@@ -149,13 +152,6 @@ const skills = [
     }
   ];
 
-  const achievements = [
-    'Digital Transformation Leader',
-    'Process Optimization Expert',
-    'Enterprise Architecture',
-    'Cross-functional Collaboration'
-  ];
-
   return (
     <div style={{
       minHeight: '100vh',
@@ -165,26 +161,26 @@ const skills = [
       overflowX: 'hidden'
     }}>
       {/* Animated Background Elements */}
-      <div 
+      <div
         style={{
           position: 'fixed',
           top: mousePosition.y / 50,
           left: mousePosition.x / 50,
-          width: '200px',
-          height: '200px',
+          width: 'clamp(100px, 20vw, 200px)',
+          height: 'clamp(100px, 20vw, 200px)',
           background: 'radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%)',
           borderRadius: '50%',
           pointerEvents: 'none',
           zIndex: 0
         }}
       />
-      <div 
+      <div
         style={{
           position: 'fixed',
           bottom: mousePosition.y / 40,
           right: mousePosition.x / 40,
-          width: '150px',
-          height: '150px',
+          width: 'clamp(80px, 15vw, 150px)',
+          height: 'clamp(80px, 15vw, 150px)',
           background: 'radial-gradient(circle, rgba(236, 72, 153, 0.1) 0%, transparent 70%)',
           borderRadius: '50%',
           pointerEvents: 'none',
@@ -206,18 +202,18 @@ const skills = [
         <div style={{
           maxWidth: '1400px',
           margin: '0 auto',
-          padding: '0 2rem',
+          padding: '0 clamp(1rem, 4vw, 2rem)',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          height: '80px'
+          height: 'clamp(60px, 10vh, 80px)'
         }}>
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
             style={{
-              fontSize: '1.8rem',
+              fontSize: 'clamp(1.2rem, 4vw, 1.8rem)',
               fontWeight: 'bold',
               background: 'linear-gradient(90deg, #a855f7, #ec4899)',
               WebkitBackgroundClip: 'text',
@@ -227,9 +223,12 @@ const skills = [
           >
             Tangimul Haque
           </motion.div>
-          
+
           {/* Desktop Navigation */}
-          <div style={{ display: 'flex', gap: '2.5rem' }} className="desktop-nav">
+          <div style={{
+            display: 'flex',
+            gap: 'clamp(1rem, 3vw, 2.5rem)'
+          }} className="desktop-nav">
             {['about', 'experience', 'education', 'skills', 'contact'].map((item) => (
               <motion.button
                 key={item}
@@ -238,14 +237,14 @@ const skills = [
                 whileTap={{ scale: 0.95 }}
                 style={{
                   position: 'relative',
-                  background: 'rgba(15, 23, 42, 0.95)',
+                  background: 'transparent',
                   textTransform: 'capitalize',
-                  transition: 'all 0.3s ease',
                   border: 'none',
                   paddingBottom: '4px',
                   color: activeSection === item ? '#a855f7' : '#cbd5e1',
                   fontWeight: activeSection === item ? '600' : '400',
-                  letterSpacing: '0.5px'
+                  fontSize: 'clamp(0.9rem, 2.5vw, 1rem)',
+                  cursor: 'pointer'
                 }}
               >
                 {item}
@@ -269,12 +268,12 @@ const skills = [
               </motion.button>
             ))}
           </div>
-          
+
           {/* Mobile Menu Button */}
-          <motion.button 
+          <motion.button
             whileTap={{ scale: 0.95 }}
-            style={{ 
-              display: 'none', 
+            style={{
+              display: 'none',
               color: 'white',
               background: 'transparent',
               border: 'none',
@@ -288,14 +287,52 @@ const skills = [
             </svg>
           </motion.button>
         </div>
+
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            style={{
+              background: 'rgba(15, 23, 42, 0.95)',
+              backdropFilter: 'blur(20px)',
+              padding: '1rem',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '1rem',
+              position: 'absolute',
+              top: 'clamp(60px, 10vh, 80px)',
+              width: '100%',
+              zIndex: 999
+            }}
+          >
+            {['about', 'experience', 'education', 'skills', 'contact'].map((item) => (
+              <motion.button
+                key={item}
+                onClick={() => scrollToSection(item)}
+                whileHover={{ x: 10 }}
+                style={{
+                  padding: '1rem',
+                  background: activeSection === item ? 'rgba(139, 92, 246, 0.2)' : 'transparent',
+                  border: 'none',
+                  color: activeSection === item ? '#a855f7' : '#cbd5e1',
+                  textTransform: 'capitalize',
+                  fontSize: '1.1rem',
+                  textAlign: 'left',
+                  cursor: 'pointer'
+                }}
+              >
+                {item}
+              </motion.button>
+            ))}
+          </motion.div>
+        )}
       </nav>
 
       {/* Hero Section */}
       <section style={{
-        paddingTop: '10rem',
-        paddingBottom: '8rem',
-        paddingLeft: '2rem',
-        paddingRight: '2rem',
+        padding: 'clamp(4rem, 15vh, 10rem) clamp(1rem, 4vw, 2rem) clamp(4rem, 10vh, 8rem)',
         position: 'relative',
         overflow: 'hidden'
       }}>
@@ -307,8 +344,8 @@ const skills = [
         }}>
           <div style={{
             display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '4rem',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: 'clamp(1rem, 5vw, 4rem)',
             alignItems: 'center'
           }} className="hero-grid">
             <motion.div
@@ -322,24 +359,24 @@ const skills = [
                 gap: '1rem',
                 marginBottom: '1.5rem'
               }}>
-                <Sparkles style={{ 
-                  color: '#a855f7', 
-                  width: '2rem', 
-                  height: '2rem' 
+                <Sparkles style={{
+                  color: '#a855f7',
+                  width: 'clamp(1.5rem, 5vw, 2rem)',
+                  height: 'clamp(1.5rem, 5vw, 2rem)'
                 }} />
                 <span style={{
                   background: 'linear-gradient(90deg, #a855f7, #ec4899)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                   fontWeight: '800',
-                  fontSize: '1.1rem'
+                  fontSize: 'clamp(0.9rem, 3vw, 1.1rem)'
                 }}>
-                  Manufacturing Technology 
+                  Manufacturing Technology
                 </span>
               </div>
-              
+
               <h1 style={{
-                fontSize: 'clamp(2.5rem, 6vw, 4rem)',
+                fontSize: 'clamp(1.8rem, 6vw, 3.5rem)',
                 fontWeight: 'bold',
                 marginBottom: '1.5rem',
                 lineHeight: '1.1',
@@ -356,24 +393,28 @@ const skills = [
                   Director
                 </span>
               </h1>
-              
+
               <p style={{
-                fontSize: '1.25rem',
+                fontSize: 'clamp(0.9rem, 2.5vw, 1.25rem)',
                 color: '#cbd5e1',
-                marginBottom: '2.5rem',
+                marginBottom: 'clamp(1.5rem, 4vw, 2.5rem)',
                 lineHeight: '1.7',
-                maxWidth: '500px'
+                maxWidth: '90%'
               }}>
                 Building robust, scalable web applications that drive operational efficiency and digital transformation in manufacturing processes.
               </p>
-              
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.25rem' }}>
+
+              <div style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: 'clamp(0.75rem, 2vw, 1.25rem)'
+              }}>
                 <motion.button
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => scrollToSection('contact')}
                   style={{
-                    padding: '0.875rem 2.25rem',
+                    padding: 'clamp(0.5rem, 2vw, 0.875rem) clamp(1rem, 3vw, 2.25rem)',
                     background: 'linear-gradient(90deg, #7c3aed, #db2777)',
                     borderRadius: '0.75rem',
                     fontWeight: '600',
@@ -384,19 +425,19 @@ const skills = [
                     alignItems: 'center',
                     gap: '0.75rem',
                     boxShadow: '0 10px 25px rgba(124, 58, 237, 0.3)',
-                    transition: 'all 0.3s ease'
+                    fontSize: 'clamp(0.9rem, 2.5vw, 1rem)'
                   }}
                 >
                   Get In Touch
-                  <ArrowRight style={{ width: '1.25rem', height: '1.25rem' }} />
+                  <ArrowRight style={{ width: 'clamp(1rem, 3vw, 1.25rem)', height: 'clamp(1rem, 3vw, 1.25rem)' }} />
                 </motion.button>
-                
+
                 <motion.button
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => scrollToSection('experience')}
                   style={{
-                    padding: '0.875rem 2.25rem',
+                    padding: 'clamp(0.5rem, 2vw, 0.875rem) clamp(1rem, 3vw, 2.25rem)',
                     border: '2px solid rgba(139, 92, 246, 0.5)',
                     borderRadius: '0.75rem',
                     fontWeight: '600',
@@ -406,16 +447,15 @@ const skills = [
                     display: 'flex',
                     alignItems: 'center',
                     gap: '0.75rem',
-                    transition: 'all 0.3s ease',
-                    backdropFilter: 'blur(10px)'
+                    fontSize: 'clamp(0.9rem, 2.5vw, 1rem)'
                   }}
                 >
                   View Experience
-                  <Briefcase style={{ width: '1.25rem', height: '1.25rem' }} />
+                  <Briefcase style={{ width: 'clamp(1rem, 3vw, 1.25rem)', height: 'clamp(1rem, 3vw, 1.25rem)' }} />
                 </motion.button>
               </div>
             </motion.div>
-            
+
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -423,122 +463,98 @@ const skills = [
               style={{
                 position: 'relative',
                 justifySelf: 'center',
+                width: '100%',
+                maxWidth: 'clamp(250px, 50vw, 400px)'
               }}
             >
-      <div
-        style={{
-          position: 'relative',
-          width: 'clamp(400px, 40vw, 300px)',
-          height: 'clamp(400px, 40vw, 300px)',
-        }}
-      >
-        {/* Background Gradient Circle */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            background: 'linear-gradient(90deg, #7c3aed, #db2777)',
-            borderRadius: '80%',
-            filter: 'blur(40px)',
-            opacity: 0.4,
-            animation: 'pulse 3s infinite alternate',
-            zIndex: 1,
-          }}
-        ></div>
+              <div style={{
+                position: 'relative',
+                width: '100%',
+                aspectRatio: '1/1'
+              }}>
+                <div style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background: 'linear-gradient(90deg, #7c3aed, #db2777)',
+                  borderRadius: '50%',
+                  filter: 'blur(40px)',
+                  opacity: 0.4,
+                  animation: 'pulse 3s infinite alternate'
+                }}></div>
 
-        {/* Inner Circle with Photo */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: '8px',
-            background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.8))',
-            borderRadius: '70%',
-            border: '3px solid rgba(139, 92, 246, 0.4)',
-            backdropFilter: 'blur(20px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 2,
-            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)',
-            overflow: 'hidden', // Ensure the image doesn't overflow the circle
-          }}
-        >
-          <img
-            src={profileImage} // Use imported image or URL (e.g., '/images/profile.jpg' if in public)
-            alt="Profile"
-            style={{
-              width: '100%', // Fill the container
-              height: '100%', // Fill the container
-              objectFit: 'cover', // Ensure the image covers the circle without distortion
-              borderRadius: '50%', // Match the circular shape
-            }}
-          />
-        </div>
+                <div style={{
+                  position: 'absolute',
+                  inset: '8px',
+                  background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.8))',
+                  borderRadius: '50%',
+                  border: '3px solid rgba(139, 92, 246, 0.4)',
+                  backdropFilter: 'blur(20px)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)',
+                  overflow: 'hidden'
+                }}>
+                  <img
+                    src={profileImage}
+                    alt="Profile"
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      borderRadius: '50%'
+                    }}
+                  />
+                </div>
 
-        {/* Floating Elements */}
-        <motion.div
-          animate={{
-            y: [0, -10, 0],
-            rotate: [0, 5, 0],
-          }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-          style={{
-            position: 'absolute',
-            top: '1%',
-            right: '1%',
-            background: 'rgba(236, 72, 153, 0.2)',
-            borderRadius: '50%',
-            width: '40px',
-            height: '40px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            border: '1px solid rgba(236, 72, 153, 0.3)',
-          }}
-        >
-          <Code style={{ color: '#ec4899', width: '40px', height: '20px' }} />
-        </motion.div>
+                <motion.div
+                  animate={{ y: [0, -10, 0], rotate: [0, 5, 0] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                  style={{
+                    position: 'absolute',
+                    top: '10%',
+                    right: '10%',
+                    background: 'rgba(236, 72, 153, 0.2)',
+                    borderRadius: '50%',
+                    width: 'clamp(30px, 8vw, 40px)',
+                    height: 'clamp(30px, 8vw, 40px)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    border: '1px solid rgba(236, 72, 153, 0.3)'
+                  }}
+                >
+                  <Code style={{ color: '#ec4899', width: 'clamp(16px, 4vw, 20px)', height: 'clamp(16px, 4vw, 20px)' }} />
+                </motion.div>
 
-        <motion.div
-          animate={{
-            y: [0, 10, 0],
-            rotate: [0, -5, 0],
-          }}
-          transition={{
-            duration: 5,
-            repeat: Infinity,
-            ease: 'easeInOut',
-            delay: 1,
-          }}
-          style={{
-            position: 'absolute',
-            bottom: '15%',
-            left: '15%',
-            background: 'rgba(139, 92, 246, 0.2)',
-            borderRadius: '50%',
-            width: '30px',
-            height: '30px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            border: '1px solid rgba(139, 92, 246, 0.3)',
-          }}
-        >
-          <Database style={{ color: '#a855f7', width: '16px', height: '16px' }} />
-        </motion.div>
-      </div>
-    </motion.div>
+                <motion.div
+                  animate={{ y: [0, 10, 0], rotate: [0, -5, 0] }}
+                  transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+                  style={{
+                    position: 'absolute',
+                    bottom: '15%',
+                    left: '15%',
+                    background: 'rgba(139, 92, 246, 0.2)',
+                    borderRadius: '50%',
+                    width: 'clamp(20px, 6vw, 30px)',
+                    height: 'clamp(20px, 6vw, 30px)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    border: '1px solid rgba(139, 92, 246, 0.3)'
+                  }}
+                >
+                  <Database style={{ color: '#a855f7', width: 'clamp(12px, 3vw, 16px)', height: 'clamp(12px, 3vw, 16px)' }} />
+                </motion.div>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
       {/* About Section */}
       <section id="about" style={{
-        padding: '6rem 2rem',
+        padding: 'clamp(3rem, 10vh, 6rem) clamp(1rem, 4vw, 2rem)',
         position: 'relative',
         overflow: 'hidden'
       }}>
@@ -553,13 +569,10 @@ const skills = [
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            style={{
-              textAlign: 'center',
-              marginBottom: '4rem'
-            }}
+            style={{ textAlign: 'center', marginBottom: 'clamp(2rem, 6vw, 4rem)' }}
           >
             <h2 style={{
-              fontSize: 'clamp(2rem, 5vw, 3rem)',
+              fontSize: 'clamp(1.5rem, 5vw, 3rem)',
               fontWeight: 'bold',
               marginBottom: '1.5rem',
               background: 'linear-gradient(90deg, #a855f7, #ec4899)',
@@ -574,11 +587,11 @@ const skills = [
               borderRadius: '2px'
             }}></div>
           </motion.div>
-          
+
           <div style={{
             display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '3rem'
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: 'clamp(1.5rem, 4vw, 3rem)'
           }} className="about-grid">
             <motion.div
               initial={{ opacity: 0, x: -50 }}
@@ -589,10 +602,9 @@ const skills = [
                 background: 'rgba(30, 41, 59, 0.6)',
                 backdropFilter: 'blur(20px)',
                 borderRadius: '1.5rem',
-                padding: '2.5rem',
+                padding: 'clamp(1.5rem, 4vw, 2.5rem)',
                 border: '1px solid rgba(139, 92, 246, 0.3)',
-                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)',
-                transition: 'all 0.3s ease'
+                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)'
               }}
             >
               <div style={{
@@ -601,36 +613,36 @@ const skills = [
                 gap: '1rem',
                 marginBottom: '2rem'
               }}>
-                <Briefcase style={{ 
-                  color: '#a855f7', 
-                  width: '2rem', 
-                  height: '2rem' 
+                <Briefcase style={{
+                  color: '#a855f7',
+                  width: 'clamp(1.5rem, 5vw, 2rem)',
+                  height: 'clamp(1.5rem, 5vw, 2rem)'
                 }} />
                 <h3 style={{
-                  fontSize: '1.75rem',
+                  fontSize: 'clamp(1.25rem, 3vw, 1.75rem)',
                   fontWeight: 'bold',
                   background: 'linear-gradient(90deg, #a855f7, #ec4899)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent'
                 }}>Professional Journey</h3>
               </div>
-              
+
               <p style={{
                 color: '#cbd5e1',
                 marginBottom: '2rem',
                 lineHeight: '1.8',
-                fontSize: '1.1rem',
+                fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
                 textAlign: 'justify'
               }}>
                 I am currently serving as Deputy Assistant Director in the Manufacturing Automations team at WALTON Hi-Tech Industries PLC, within the WALTON ICT Department. With {years} years of professional experience, 
                 I specialize in developing robust, scalable, and business-critical web and desktop applications that drive operational efficiency and digital transformation in manufacturing processes. 
                 I have hands-on experience designing end-to-end solutions—requirements collection, system design, implementation, testing, and deployment—focused on real business impact and operational reliability.
               </p>
-              
+
               <div style={{
                 display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: '2rem'
+                gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+                gap: 'clamp(1rem, 3vw, 2rem)'
               }}>
                 {[
                   { icon: <Award />, label: 'Experience', value: `${years} Years` },
@@ -661,15 +673,19 @@ const skills = [
                       <p style={{
                         fontWeight: '600',
                         color: '#a855f7',
-                        marginBottom: '0.25rem'
+                        marginBottom: '0.25rem',
+                        fontSize: 'clamp(0.8rem, 2.5vw, 1rem)'
                       }}>{item.label}</p>
-                      <p style={{ color: '#cbd5e1' }}>{item.value}</p>
+                      <p style={{
+                        color: '#cbd5e1',
+                        fontSize: 'clamp(0.7rem, 2vw, 0.9rem)'
+                      }}>{item.value}</p>
                     </div>
                   </div>
                 ))}
               </div>
             </motion.div>
-            
+
             <motion.div
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -679,7 +695,7 @@ const skills = [
                 background: 'rgba(30, 41, 59, 0.6)',
                 backdropFilter: 'blur(20px)',
                 borderRadius: '1.5rem',
-                padding: '2.5rem',
+                padding: 'clamp(1.5rem, 4vw, 2.5rem)',
                 border: '1px solid rgba(139, 92, 246, 0.3)',
                 boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)'
               }}
@@ -690,24 +706,21 @@ const skills = [
                 gap: '1rem',
                 marginBottom: '2rem'
               }}>
-                <Star style={{ 
-                  color: '#a855f7', 
-                  width: '2rem', 
-                  height: '2rem' 
+                <Star style={{
+                  color: '#a855f7',
+                  width: 'clamp(1.5rem, 5vw, 2rem)',
+                  height: 'clamp(1.5rem, 5vw, 2rem)'
                 }} />
                 <h3 style={{
-                  fontSize: '1.75rem',
+                  fontSize: 'clamp(1.25rem, 3vw, 1.75rem)',
                   fontWeight: 'bold',
                   background: 'linear-gradient(90deg, #a855f7, #ec4899)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent'
                 }}>Core Expertise</h3>
               </div>
-              
-              <div style={{
-                display: 'grid',
-                gap: '1.5rem'
-              }}>
+
+              <div style={{ display: 'grid', gap: '1.5rem' }}>
                 {[
                   { title: 'System Architecture', desc: 'Designing scalable, maintainable systems for enterprise applications' },
                   { title: 'Process Optimization', desc: 'Streamlining manufacturing workflows through digital solutions' },
@@ -723,10 +736,10 @@ const skills = [
                     borderRadius: '1rem',
                     border: '1px solid rgba(139, 92, 246, 0.2)'
                   }}>
-                    <CheckCircle style={{ 
-                      color: '#10b981', 
-                      width: '1.5rem', 
-                      height: '1.5rem',
+                    <CheckCircle style={{
+                      color: '#10b981',
+                      width: 'clamp(1.2rem, 3vw, 1.5rem)',
+                      height: 'clamp(1.2rem, 3vw, 1.5rem)',
                       flexShrink: 0,
                       marginTop: '0.25rem'
                     }} />
@@ -734,9 +747,13 @@ const skills = [
                       <h4 style={{
                         fontWeight: '600',
                         color: 'white',
-                        marginBottom: '0.25rem'
+                        marginBottom: '0.25rem',
+                        fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)'
                       }}>{item.title}</h4>
-                      <p style={{ color: '#cbd5e1', fontSize: '0.95rem' }}>{item.desc}</p>
+                      <p style={{
+                        color: '#cbd5e1',
+                        fontSize: 'clamp(0.8rem, 2vw, 0.95rem)'
+                      }}>{item.desc}</p>
                     </div>
                   </div>
                 ))}
@@ -748,7 +765,7 @@ const skills = [
 
       {/* Experience Section */}
       <section id="experience" style={{
-        padding: '6rem 2rem',
+        padding: 'clamp(3rem, 10vh, 6rem) clamp(1rem, 4vw, 2rem)',
         background: 'rgba(15, 23, 42, 0.3)',
         position: 'relative',
         overflow: 'hidden'
@@ -764,13 +781,10 @@ const skills = [
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            style={{
-              textAlign: 'center',
-              marginBottom: '4rem'
-            }}
+            style={{ textAlign: 'center', marginBottom: 'clamp(2rem, 6vw, 4rem)' }}
           >
             <h2 style={{
-              fontSize: 'clamp(2rem, 5vw, 3rem)',
+              fontSize: 'clamp(1.5rem, 5vw, 3rem)',
               fontWeight: 'bold',
               marginBottom: '1.5rem',
               background: 'linear-gradient(90deg, #a855f7, #ec4899)',
@@ -785,11 +799,8 @@ const skills = [
               borderRadius: '2px'
             }}></div>
           </motion.div>
-          
-          <div style={{ 
-            display: 'grid',
-            gap: '2.5rem'
-          }}>
+
+          <div style={{ display: 'grid', gap: 'clamp(1.5rem, 4vw, 2.5rem)' }}>
             {experiences.map((exp, index) => (
               <motion.div
                 key={index}
@@ -801,42 +812,40 @@ const skills = [
                   background: 'rgba(30, 41, 59, 0.6)',
                   backdropFilter: 'blur(20px)',
                   borderRadius: '1.5rem',
-                  padding: '2.5rem',
+                  padding: 'clamp(1.5rem, 4vw, 2.5rem)',
                   border: '1px solid rgba(139, 92, 246, 0.3)',
                   boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)',
-                  transition: 'all 0.3s ease',
                   position: 'relative',
                   overflow: 'hidden'
                 }}
               >
-                {/* Decorative element */}
                 <div style={{
                   position: 'absolute',
                   top: 0,
                   left: 0,
                   width: '5px',
                   height: '100%',
-                  background: exp.type === 'leadership' ? 
-                    'linear-gradient(to bottom, #a855f7, #ec4899)' : 
+                  background: exp.type === 'leadership' ?
+                    'linear-gradient(to bottom, #a855f7, #ec4899)' :
                     'linear-gradient(to bottom, #3b82f6, #1d4ed8)',
                   borderRadius: '1.5rem 0 0 1.5rem'
                 }}></div>
-                
+
                 <div style={{
                   display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'flex-start',
+                  flexDirection: 'column',
+                  gap: '1rem',
                   marginBottom: '2rem'
                 }} className="experience-header">
                   <div>
                     <h3 style={{
-                      fontSize: '1.75rem',
+                      fontSize: 'clamp(1.25rem, 3vw, 1.75rem)',
                       fontWeight: 'bold',
                       color: '#a855f7',
                       marginBottom: '0.5rem'
                     }}>{exp.title}</h3>
                     <p style={{
-                      fontSize: '1.25rem',
+                      fontSize: 'clamp(0.9rem, 2.5vw, 1.25rem)',
                       color: '#cbd5e1',
                       fontWeight: '500'
                     }}>{exp.company}</p>
@@ -847,35 +856,37 @@ const skills = [
                     borderRadius: '9999px',
                     color: '#c084fc',
                     fontWeight: '600',
-                    border: '1px solid rgba(139, 92, 246, 0.3)'
+                    border: '1px solid rgba(139, 92, 246, 0.3)',
+                    fontSize: 'clamp(0.8rem, 2vw, 1rem)'
                   }}>
                     {exp.period}
                   </div>
                 </div>
-                
+
                 <p style={{
                   color: '#cbd5e1',
                   marginBottom: '2rem',
                   lineHeight: '1.8',
-                  fontSize: '1.1rem'
+                  fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)'
                 }}>{exp.description}</p>
-                
+
                 <h4 style={{
                   fontWeight: '600',
-                  fontSize: '1.25rem',
+                  fontSize: 'clamp(1rem, 2.5vw, 1.25rem)',
                   marginBottom: '1.5rem',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.75rem'
                 }}>
-                  <Star style={{ color: '#a855f7', width: '1.5rem', height: '1.5rem' }} />
+                  <Star style={{
+                    color: '#a855f7',
+                    width: 'clamp(1.2rem, 3vw, 1.5rem)',
+                    height: 'clamp(1.2rem, 3vw, 1.5rem)'
+                  }} />
                   Key Achievements
                 </h4>
-                
-                <ul style={{ 
-                  display: 'grid',
-                  gap: '1rem'
-                }}>
+
+                <ul style={{ display: 'grid', gap: '1rem' }}>
                   {exp.achievements.map((achievement, i) => (
                     <li key={i} style={{
                       display: 'flex',
@@ -894,7 +905,11 @@ const skills = [
                         marginTop: '0.75rem',
                         flexShrink: 0
                       }}></div>
-                      <span style={{ color: '#cbd5e1', lineHeight: '1.6' }}>{achievement}</span>
+                      <span style={{
+                        color: '#cbd5e1',
+                        lineHeight: '1.6',
+                        fontSize: 'clamp(0.85rem, 2.5vw, 1rem)'
+                      }}>{achievement}</span>
                     </li>
                   ))}
                 </ul>
@@ -906,7 +921,8 @@ const skills = [
 
       {/* Education Section */}
       <section id="education" style={{
-        padding: '6rem 2rem',
+        padding: 'clamp(3rem, 10vh, 6rem) clamp(1rem, 4vw, 2rem)',
+        background: 'rgba(15, 25, 48, 0.3)',
         position: 'relative',
         overflow: 'hidden'
       }}>
@@ -921,14 +937,10 @@ const skills = [
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            style={{
-              textAlign: 'center',
-              marginBottom: '4rem',
-              
-            }}
+            style={{ textAlign: 'center', marginBottom: 'clamp(2rem, 6vw, 4rem)' }}
           >
             <h2 style={{
-              fontSize: 'clamp(2rem, 5vw, 3rem)',
+              fontSize: 'clamp(1.5rem, 5vw, 3rem)',
               fontWeight: 'bold',
               marginBottom: '1.5rem',
               background: 'linear-gradient(90deg, #a855f7, #ec4899)',
@@ -943,11 +955,11 @@ const skills = [
               borderRadius: '2px'
             }}></div>
           </motion.div>
-          
-          <div style={{ 
+
+          <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(500px, 1fr))',
-            gap: '2rem'
+            contaninerStyle,
+            gap: 'clamp(1.5rem, 4vw, 2rem)'
           }}>
             {education.map((edu, index) => (
               <motion.div
@@ -960,36 +972,34 @@ const skills = [
                   background: 'rgba(30, 41, 59, 0.6)',
                   backdropFilter: 'blur(20px)',
                   borderRadius: '1.5rem',
-                  padding: '2.5rem',
+                  padding: 'clamp(1.5rem, 4vw, 2.5rem)',
                   border: '1px solid rgba(139, 92, 246, 0.3)',
                   boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)',
-                  transition: 'all 0.3s ease',
                   position: 'relative',
                   overflow: 'hidden'
                 }}
               >
-                {/* Decorative element */}
                 <div style={{
                   position: 'absolute',
                   top: 0,
                   left: 0,
                   width: '5px',
                   height: '100%',
-                  background: edu.type === 'undergraduate' ? 
-                    'linear-gradient(to bottom, #a855f7, #ec4899)' : 
+                  background: edu.type === 'undergraduate' ?
+                    'linear-gradient(to bottom, #a855f7, #ec4899)' :
                     'linear-gradient(to bottom, #3b82f6, #1d4ed8)',
                   borderRadius: '1.5rem 0 0 1.5rem'
                 }}></div>
-                
+
                 <div style={{
                   display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'flex-start',
+                  flexDirection: 'column',
+                  gap: '1rem',
                   marginBottom: '2rem'
                 }} className="education-header">
                   <div>
                     <h3 style={{
-                      fontSize: '1.4rem',
+                      fontSize: 'clamp(1rem, 2.5vw, 1.4rem)',
                       fontWeight: 'bold',
                       color: '#a855f7',
                       marginBottom: '0.4rem',
@@ -997,11 +1007,14 @@ const skills = [
                       alignItems: 'center',
                       gap: '0.75rem'
                     }}>
-                      <GraduationCap style={{ width: '8rem', height: '4rem' }} />
+                      <GraduationCap style={{
+                        width: 'clamp(1.5rem, 5vw, 2rem)',
+                        height: 'clamp(1.5rem, 5vw, 2rem)'
+                      }} />
                       {edu.degree}
                     </h3>
                     <p style={{
-                      fontSize: '1.25rem',
+                      fontSize: 'clamp(0.9rem, 2.5vw, 1.25rem)',
                       color: '#cbd5e1',
                       fontWeight: '400'
                     }}>{edu.institution}</p>
@@ -1012,12 +1025,13 @@ const skills = [
                     borderRadius: '9999px',
                     color: '#c084fc',
                     fontWeight: '600',
-                    border: '1px solid rgba(139, 92, 246, 0.3)'
+                    border: '1px solid rgba(139, 92, 246, 0.3)',
+                    fontSize: 'clamp(0.8rem, 2vw, 1rem)'
                   }}>
                     {edu.period}
                   </div>
                 </div>
-                
+
                 <div style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -1028,64 +1042,29 @@ const skills = [
                   borderRadius: '1rem',
                   border: '1px solid rgba(139, 92, 246, 0.2)'
                 }}>
-                  <Trophy style={{ 
-                    color: '#10b981', 
-                    width: '1.5rem', 
-                    height: '1.5rem' 
+                  <Trophy style={{
+                    color: '#10b981',
+                    width: 'clamp(1.2rem, 3vw, 1.5rem)',
+                    height: 'clamp(1.2rem, 3vw, 1.5rem)'
                   }} />
-                  <span style={{ color: '#10b981', fontWeight: '600', fontSize: '1.1rem' }}>
+                  <span style={{
+                    color: '#10b981',
+                    fontWeight: '600',
+                    fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)'
+                  }}>
                     {edu.grade}
                   </span>
                 </div>
-                
-                {/* <h4 style={{
-                  fontWeight: '600',
-                  fontSize: '1.25rem',
-                  marginBottom: '1.5rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.75rem'
-                }}>
-                  <BookOpen style={{ color: '#a855f7', width: '1.5rem', height: '1.5rem' }} />
-                  Academic Achievements
-                </h4> */}
-                
-                {/* <ul style={{ 
-                  display: 'grid',
-                  gap: '1rem'
-                }}>
-                  {edu.achievements.map((achievement, i) => (
-                    <li key={i} style={{
-                      display: 'flex',
-                      alignItems: 'flex-start',
-                      gap: '1rem',
-                      padding: '1rem',
-                      background: 'rgba(15, 23, 42, 0.5)',
-                      borderRadius: '1rem',
-                      border: '1px solid rgba(139, 92, 246, 0.2)'
-                    }}>
-                      <div style={{
-                        background: 'linear-gradient(90deg, #a855f7, #ec4899)',
-                        width: '8px',
-                        height: '8px',
-                        borderRadius: '50%',
-                        marginTop: '0.75rem',
-                        flexShrink: 0
-                      }}></div>
-                      <span style={{ color: '#cbd5e1', lineHeight: '1.6' }}>{achievement}</span>
-                    </li>
-                  ))}
-                </ul> */}
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-
       {/* Skills Section */}
       <section id="skills" style={{
-        padding: '6rem 2rem',
+        padding: 'clamp(3rem, 10vh, 6rem) clamp(1rem, 4vw, 2rem)',
+        background: 'rgba(15, 25, 48, 0.3)',
         position: 'relative',
         overflow: 'hidden'
       }}>
@@ -1100,13 +1079,10 @@ const skills = [
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            style={{
-              textAlign: 'center',
-              marginBottom: '4rem'
-            }}
+            style={{ textAlign: 'center', marginBottom: 'clamp(2rem, 6vw, 4rem)' }}
           >
             <h2 style={{
-              fontSize: 'clamp(2rem, 5vw, 3rem)',
+              fontSize: 'clamp(1.5rem, 5vw, 3rem)',
               fontWeight: 'bold',
               marginBottom: '1.5rem',
               background: 'linear-gradient(90deg, #a855f7, #ec4899)',
@@ -1121,11 +1097,11 @@ const skills = [
               borderRadius: '2px'
             }}></div>
           </motion.div>
-          
+
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
-            gap: '2.5rem'
+            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+            gap: 'clamp(1.5rem, 4vw, 2.5rem)'
           }}>
             {skills.map((skill, index) => (
               <motion.div
@@ -1139,10 +1115,9 @@ const skills = [
                   background: 'rgba(30, 41, 59, 0.6)',
                   backdropFilter: 'blur(20px)',
                   borderRadius: '1.5rem',
-                  padding: '2rem',
+                  padding: 'clamp(1.5rem, 4vw, 2rem)',
                   border: '1px solid rgba(139, 92, 246, 0.3)',
-                  boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)',
-                  transition: 'all 0.3s ease'
+                  boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)'
                 }}
               >
                 <div style={{
@@ -1152,14 +1127,14 @@ const skills = [
                   marginBottom: '1rem'
                 }}>
                   <div>
-                    <h3 style={{ 
-                      fontWeight: '600', 
-                      fontSize: '1.25rem',
+                    <h3 style={{
+                      fontWeight: '600',
+                      fontSize: 'clamp(1rem, 2.5vw, 1.25rem)',
                       color: 'white',
                       marginBottom: '0.25rem'
                     }}>{skill.name}</h3>
                     <span style={{
-                      fontSize: '0.85rem',
+                      fontSize: 'clamp(0.7rem, 2vw, 0.85rem)',
                       color: '#a855f7',
                       fontWeight: '500',
                       background: 'rgba(139, 92, 246, 0.2)',
@@ -1170,13 +1145,13 @@ const skills = [
                       {skill.category}
                     </span>
                   </div>
-                  <span style={{ 
-                    color: '#a855f7', 
+                  <span style={{
+                    color: '#a855f7',
                     fontWeight: 'bold',
-                    fontSize: '1.1rem'
+                    fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)'
                   }}>{skill.level}%</span>
                 </div>
-                
+
                 <div style={{
                   width: '100%',
                   background: 'rgba(15, 23, 42, 0.5)',
@@ -1204,7 +1179,7 @@ const skills = [
 
       {/* Contact Section */}
       <section id="contact" style={{
-        padding: '6rem 2rem',
+        padding: 'clamp(3rem, 10vh, 6rem) clamp(1rem, 4vw, 2rem)',
         background: 'rgba(15, 23, 42, 0.3)',
         position: 'relative',
         overflow: 'hidden'
@@ -1220,13 +1195,10 @@ const skills = [
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            style={{
-              textAlign: 'center',
-              marginBottom: '4rem'
-            }}
+            style={{ textAlign: 'center', marginBottom: 'clamp(2rem, 6vw, 4rem)' }}
           >
             <h2 style={{
-              fontSize: 'clamp(2rem, 5vw, 3rem)',
+              fontSize: 'clamp(1.5rem, 5vw, 3rem)',
               fontWeight: 'bold',
               marginBottom: '1.5rem',
               background: 'linear-gradient(90deg, #a855f7, #ec4899)',
@@ -1241,38 +1213,35 @@ const skills = [
               borderRadius: '2px'
             }}></div>
           </motion.div>
-          
+
           <div style={{
             display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '4rem'
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: 'clamp(1.5rem, 4vw, 4rem)'
           }} className="contact-grid">
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
-              style={{
-                display: 'grid',
-                gap: '2.5rem'
-              }}
+              style={{ display: 'grid', gap: 'clamp(1.5rem, 4vw, 2.5rem)' }}
             >
               {[
-                { 
-                  icon: Mail, 
-                  title: 'Email', 
+                {
+                  icon: Mail,
+                  title: 'Email',
                   value: 'tanjimjoy@gmail.com',
-                  link: 'mailto:your.email@company.com'
+                  link: 'mailto:tanjimjoy@gmail.com'
                 },
-                { 
-                  icon: Phone, 
-                  title: 'Phone', 
+                {
+                  icon: Phone,
+                  title: 'Phone',
                   value: '+880 1838 120302',
-                  link: 'tel:+880 1838 120 302'
+                  link: 'tel:+8801838120302'
                 },
-                { 
-                  icon: MapPin, 
-                  title: 'Location', 
+                {
+                  icon: MapPin,
+                  title: 'Location',
                   value: 'Gazipur, Bangladesh',
                   link: '#'
                 }
@@ -1285,8 +1254,7 @@ const skills = [
                     display: 'flex',
                     alignItems: 'flex-start',
                     gap: '1.5rem',
-                    textDecoration: 'none',
-                    transition: 'all 0.3s ease'
+                    textDecoration: 'none'
                   }}
                 >
                   <div style={{
@@ -1299,51 +1267,47 @@ const skills = [
                     flexShrink: 0,
                     border: '1px solid rgba(139, 92, 246, 0.3)'
                   }}>
-                    <item.icon style={{ 
-                      color: '#a855f7', 
-                      width: '1.75rem', 
-                      height: '1.75rem' 
+                    <item.icon style={{
+                      color: '#a855f7',
+                      width: 'clamp(1.2rem, 3vw, 1.75rem)',
+                      height: 'clamp(1.2rem, 3vw, 1.75rem)'
                     }} />
                   </div>
                   <div>
-                    <h3 style={{ 
-                      fontSize: '1.25rem', 
-                      fontWeight: '600', 
+                    <h3 style={{
+                      fontSize: 'clamp(1rem, 2.5vw, 1.25rem)',
+                      fontWeight: '600',
                       marginBottom: '0.25rem',
                       color: 'white'
                     }}>{item.title}</h3>
-                    <p style={{ 
+                    <p style={{
                       color: '#cbd5e1',
-                      fontSize: '1.1rem'
+                      fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)'
                     }}>{item.value}</p>
                   </div>
                 </motion.a>
               ))}
-              
+
               <div style={{ paddingTop: '2rem' }}>
-                <h3 style={{ 
-                  fontSize: '1rem', 
-                  fontWeight: '600', 
+                <h3 style={{
+                  fontSize: 'clamp(0.9rem, 2.5vw, 1rem)',
+                  fontWeight: '600',
                   marginBottom: '1.5rem',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.75rem'
                 }}>
-                  <MessageSquare style={{ color: '#a855f7' }} />
+                  <MessageSquare style={{ color: '#a855f7', width: 'clamp(1.2rem, 3vw, 1.5rem)', height: 'clamp(1.2rem, 3vw, 1.5rem)' }} />
                   Connect With Me
                 </h3>
-                <div style={{ 
-                  display: 'flex', 
-                  gap: '1.5rem',
-                  flexWrap: 'wrap'
-                }}>
+                <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
                   {[
-                    { icon: Github, color: '#7c3aed', hoverColor: '#9333ea'},
-                    { icon: Linkedin, color: '#3b82f6', hoverColor: '#60a5fa' }
+                    { icon: Github, color: '#7c3aed', hoverColor: '#9333ea', link: 'https://github.com/Tanjim-joy' },
+                    { icon: Linkedin, color: '#3b82f6', hoverColor: '#60a5fa', link: 'https://linkedin.com/in/tanjim-joy' }
                   ].map((social, i) => (
                     <motion.a
                       key={i}
-                      href="https://github.com/Tanjim-joy"
+                      href={social.link}
                       whileHover={{ scale: 1.1, y: -2 }}
                       whileTap={{ scale: 0.95 }}
                       style={{
@@ -1353,21 +1317,20 @@ const skills = [
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        transition: 'all 0.3s ease',
                         border: `1px solid ${social.color}40`
                       }}
                     >
-                      <social.icon style={{ 
+                      <social.icon style={{
                         color: social.color,
-                        width: '1.75rem', 
-                        height: '1.75rem' 
+                        width: 'clamp(1.2rem, 3vw, 1.75rem)',
+                        height: 'clamp(1.2rem, 3vw, 1.75rem)'
                       }} />
                     </motion.a>
                   ))}
                 </div>
               </div>
             </motion.div>
-            
+
             <motion.div
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -1377,32 +1340,31 @@ const skills = [
                 background: 'rgba(30, 41, 59, 0.6)',
                 backdropFilter: 'blur(20px)',
                 borderRadius: '1.5rem',
-                padding: '3rem',
+                padding: 'clamp(1.5rem, 4vw, 3rem)',
                 border: '1px solid rgba(139, 92, 246, 0.3)',
                 boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)'
               }}
             >
               <form style={{ display: 'grid', gap: '1.5rem' }}>
                 <div>
-                  <label style={{ 
-                    display: 'block', 
-                    color: '#cbd5e1', 
+                  <label style={{
+                    display: 'block',
+                    color: '#cbd5e1',
                     marginBottom: '0.75rem',
-                    fontSize: '1.1rem',
-                    fontWeight: '400'
+                    fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
+                    fontWeight: '500'
                   }}>Name</label>
                   <input
                     type="text"
                     style={{
-                      width: '99%',
+                      width: '100%',
                       background: 'rgba(15, 23, 42, 0.5)',
                       border: '1px solid rgba(139, 92, 246, 0.4)',
                       borderRadius: '1rem',
-                      padding: '1rem 1.5rem',
+                      padding: 'clamp(0.75rem, 2vw, 1rem) clamp(1rem, 3vw, 1.5rem)',
                       color: 'white',
-                      fontSize: '1.1rem',
-                      outline: 'none',
-                      transition: 'all 0.3s ease'
+                      fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
+                      outline: 'none'
                     }}
                     placeholder="Enter Your Name"
                     onFocus={(e) => {
@@ -1416,26 +1378,24 @@ const skills = [
                   />
                 </div>
                 <div>
-                  <label style={{ 
-                    display: 'block', 
-                    color: '#cbd5e1', 
+                  <label style={{
+                    display: 'block',
+                    color: '#cbd5e1',
                     marginBottom: '0.75rem',
-                    fontSize: '1.1rem',
+                    fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
                     fontWeight: '500'
                   }}>Email</label>
                   <input
                     type="email"
                     style={{
-                      width: '99%',
+                      width: '100%',
                       background: 'rgba(15, 23, 42, 0.5)',
                       border: '1px solid rgba(139, 92, 246, 0.4)',
                       borderRadius: '1rem',
-                      padding: '1rem 1.5rem',
+                      padding: 'clamp(0.75rem, 2vw, 1rem) clamp(1rem, 3vw, 1.5rem)',
                       color: 'white',
-                      fontSize: '1.1rem',
-                      outline: 'none',
-                      
-                      transition: 'all 0.3s ease'
+                      fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
+                      outline: 'none'
                     }}
                     placeholder="Enter your.email@example.com"
                     onFocus={(e) => {
@@ -1449,27 +1409,26 @@ const skills = [
                   />
                 </div>
                 <div>
-                  <label style={{ 
-                    display: 'block', 
-                    color: '#cbd5e1', 
+                  <label style={{
+                    display: 'block',
+                    color: '#cbd5e1',
                     marginBottom: '0.75rem',
-                    fontSize: '1.1rem',
+                    fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
                     fontWeight: '500'
                   }}>Message</label>
                   <textarea
                     rows="4"
                     style={{
-                      width: '99%',
+                      width: '100%',
                       background: 'rgba(15, 23, 42, 0.5)',
                       border: '1px solid rgba(139, 92, 246, 0.4)',
                       borderRadius: '1rem',
-                      padding: '1rem 1.5rem',
+                      padding: 'clamp(0.75rem, 2vw, 1rem) clamp(1rem, 3vw, 1.5rem)',
                       color: 'white',
-                      fontSize: '1.1rem',
+                      fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
                       outline: 'none',
                       resize: 'vertical',
-                      minHeight: '150px',
-                      transition: 'all 0.3s ease'
+                      minHeight: '120px'
                     }}
                     placeholder="Your message here..."
                     onFocus={(e) => {
@@ -1489,22 +1448,22 @@ const skills = [
                   style={{
                     width: '100%',
                     background: 'linear-gradient(90deg, #7c3aed, #db2777)',
-                    padding: '1rem',
+                    padding: 'clamp(0.75rem, 2vw, 1rem)',
                     borderRadius: '1rem',
                     fontWeight: '600',
                     border: 'none',
                     color: 'white',
                     cursor: 'pointer',
-                    fontSize: '1.1rem',
-                    transition: 'all 0.3s ease',
+                    fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
                     boxShadow: '0 10px 25px rgba(124, 58, 237, 0.3)'
                   }}
                 >
                   Send Message
-                  <ArrowRight style={{ 
-                    marginLeft: '0.75rem', 
+                  <ArrowRight style={{
+                    marginLeft: '0.75rem',
                     verticalAlign: 'middle',
-                    transition: 'transform 0.3s ease'
+                    width: 'clamp(1rem, 3vw, 1.25rem)',
+                    height: 'clamp(1rem, 3vw, 1.25rem)'
                   }} />
                 </motion.button>
               </form>
@@ -1515,7 +1474,7 @@ const skills = [
 
       {/* Footer */}
       <footer style={{
-        padding: '3.5rem 2rem',
+        padding: 'clamp(2rem, 8vh, 3.5rem) clamp(1rem, 4vw, 2rem)',
         borderTop: '1px solid rgba(139, 92, 246, 0.3)',
         position: 'relative',
         overflow: 'hidden'
@@ -1534,13 +1493,13 @@ const skills = [
             gap: '1rem',
             marginBottom: '1.5rem'
           }}>
-            <Code style={{ 
-              color: '#a855f7', 
-              width: '1.5rem', 
-              height: '1.5rem' 
+            <Code style={{
+              color: '#a855f7',
+              width: 'clamp(1.2rem, 3vw, 1.5rem)',
+              height: 'clamp(1.2rem, 3vw, 1.5rem)'
             }} />
             <span style={{
-              fontSize: '1.25rem',
+              fontSize: 'clamp(1rem, 2.5vw, 1.25rem)',
               fontWeight: 'bold',
               background: 'linear-gradient(90deg, #a855f7, #ec4899)',
               WebkitBackgroundClip: 'text',
@@ -1549,10 +1508,10 @@ const skills = [
               Tanjim
             </span>
           </div>
-          <p style={{ 
-            color: '#94a3b8', 
-            fontSize: '1.1rem',
-            maxWidth: '600px',
+          <p style={{
+            color: '#94a3b8',
+            fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
+            maxWidth: '90%',
             margin: '0 auto',
             lineHeight: '1.6'
           }}>
@@ -1574,6 +1533,7 @@ const skills = [
           * {
             scrollbar-width: thin;
             scrollbar-color: #7c3aed #1e293b;
+            box-sizing: border-box;
           }
           
           *::-webkit-scrollbar {
@@ -1588,6 +1548,57 @@ const skills = [
             background-color: #7c3aed;
             border-radius: 20px;
             border: 2px solid #1e293b;
+          }
+
+          .desktop-nav {
+            display: flex;
+          }
+
+          .mobile-nav {
+            display: none;
+          }
+
+          @media (max-width: 768px) {
+            .desktop-nav {
+              display: none;
+            }
+
+            .mobile-nav {
+              display: block;
+            }
+
+            .hero-grid {
+              grid-template-columns: 1fr;
+              text-align: center;
+            }
+
+            .hero-grid > div:first-child {
+              order: 2;
+            }
+
+            .hero-grid > div:last-child {
+              order: 1;
+            }
+
+            .experience-header, .education-header {
+              flex-direction: column;
+              align-items: flex-start;
+            }
+
+            .contact-grid {
+              grid-template-columns: 1fr;
+            }
+          }
+
+          @media (max-width: 480px) {
+            input, textarea {
+              width: 100% !important;
+            }
+
+            .hero-grid > div:last-child {
+              max-width: 80%;
+              margin: 0 auto;
+            }
           }
         `}
       </style>
