@@ -152,7 +152,7 @@ const Portfolio = () => {
       type: 'Diploma'
     },
     {
-      degree: 'General Secondary Certificate (Electrical)',
+      degree: 'Secondary School Certificate (Electrical)',
       institution: 'Technical Secondary School & College Chapainawabganj',
       period: '2010',
       grade: 'GPA: 3.82/5.00',
