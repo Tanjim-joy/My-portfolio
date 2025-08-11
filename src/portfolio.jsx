@@ -1,7 +1,9 @@
-import React, { useState, useEffect, use } from 'react';
-import { Database, User, Briefcase, Code, GraduationCap, Mail, Phone, MapPin, Github, Linkedin, Calendar, Award, MessageSquare, ArrowRight, CheckCircle, Sparkles, Star, BookOpen, Trophy } from 'lucide-react';
+import React, { useState, useEffect, use, useRef  } from 'react';
+import { Database, User, Briefcase, Code, GraduationCap, Mail, Phone, MapPin, Github, Twitter, MessageCircle, Linkedin, Calendar, Award, MessageSquare, ArrowRight, CheckCircle, Sparkles, Star, BookOpen, Trophy } from 'lucide-react';
+
 import { motion } from 'framer-motion';
-import profileImage from './assets/2.png'; // Adjust the path as necessary
+import profileImage from './assets/2.png';
+import emailjs from '@emailjs/browser';
 
 const startdate = new Date(2023, 3, 11);
 const presentDate = new Date();
@@ -16,6 +18,19 @@ const Portfolio = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isMobile, setIsMobile] = useState(false);
+
+  const handleEmailSubmit = (e) => {
+    e.preventDefault();
+    const form = e.target;    
+    emailjs.sendForm('service_9813qpj', 'template_w58csw3', form, 'mO3ekIk2blRx-9J8d')
+      .then((result) => {
+        console.log('Email sent successfully:', result.text);
+        console.log('Form data:', {name: form.name.value, email: form.email.value, message: form.message.value});
+        form.reset();
+      }, (error) => {
+        console.error('Error sending email:', error.text);
+      });
+  }
 
   // Check screen size on mount and resize
   useEffect(() => {
@@ -126,7 +141,7 @@ const Portfolio = () => {
       degree: 'Bachelor of Science in Computer Science & Engineering',
       institution: 'City University Bangladesh',
       period: '2018 - 2022',
-      grade: 'CGPA: 2.97/4.00',
+      grade: 'CGPA: 2.95/4.00',
       type: 'undergraduate'
     },
     {
@@ -1307,11 +1322,15 @@ const Portfolio = () => {
                 <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
                   {[
                     { icon: Github, color: '#7c3aed', hoverColor: '#9333ea', link: 'https://github.com/Tanjim-joy' },
-                    { icon: Linkedin, color: '#3b82f6', hoverColor: '#60a5fa', link: 'https://linkedin.com/in/tanjim-joy' }
+                    { icon: Linkedin, color: '#3b82f6', hoverColor: '#60a5fa', link: 'https://www.linkedin.com/in/tangimul/' },
+                    { icon: MessageCircle, color: '#25D366', hoverColor: '#2563eb', link: 'https://wa.me/8801838120302' },
+                    
+
                   ].map((social, i) => (
                     <motion.a
                       key={i}
                       href={social.link}
+                      target="_blank"
                       whileHover={{ scale: 1.1, y: -2 }}
                       whileTap={{ scale: 0.95 }}
                       style={{
@@ -1349,7 +1368,7 @@ const Portfolio = () => {
                 boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)'
               }}
             >
-              <form style={{ display: 'grid', gap: '1.5rem' }}>
+              <form  style={{ display: 'grid', gap: '1.5rem' }} onSubmit={handleEmailSubmit}>
                 <div>
                   <label style={{
                     display: 'block',
@@ -1370,6 +1389,7 @@ const Portfolio = () => {
                       fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
                       outline: 'none'
                     }}
+                    name='name'
                     placeholder="Enter Your Name"
                     onFocus={(e) => {
                       e.target.style.borderColor = '#a855f7';
@@ -1391,6 +1411,7 @@ const Portfolio = () => {
                   }}>Email</label>
                   <input
                     type="email"
+                    name='email'
                     style={{
                       width: '100%',
                       background: 'rgba(15, 23, 42, 0.5)',
@@ -1422,6 +1443,7 @@ const Portfolio = () => {
                   }}>Message</label>
                   <textarea
                     rows="4"
+                    name='message'
                     style={{
                       width: '100%',
                       background: 'rgba(15, 23, 42, 0.5)',
