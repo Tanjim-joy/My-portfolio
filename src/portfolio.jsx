@@ -743,8 +743,11 @@ const Portfolio = () => {
                 {[
                   { title: 'System Architecture', desc: 'Designing scalable, maintainable systems for enterprise applications' },
                   { title: 'Process Optimization', desc: 'Streamlining manufacturing workflows through digital solutions' },
-                  { title: 'Full Stack Development', desc: 'Building end-to-end web applications with modern technologies' },
-                  { title: 'Stakeholder Management', desc: 'Bridging technical and business requirements effectively' }
+                  { title: 'Full Stack Development', desc: 'Building end-to-end web applications with modern technologies' },              
+                  { title: 'Localization & Normalization', desc: 'Implementing multilingual support and data normalization for seamless user experience across Bangla and English' },              
+                  { title: 'Technical Troubleshooting', desc: 'Diagnosing and resolving complex logic issues with precision and speed' },
+                  { title: 'Stakeholder Management', desc: 'Bridging technical and business requirements effectively' },
+                  { title: 'Reporting & Analytics', desc: 'Crafting insightful, real-time reporting tools for data-driven decision-making in manufacturing environments'}
                 ].map((item, index) => (
                   <div key={index} style={{
                     display: 'flex',
