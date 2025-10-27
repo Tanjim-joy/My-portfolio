@@ -1544,7 +1544,7 @@ const Portfolio = () => {
             margin: '0 auto',
             lineHeight: '1.6'
           }}>
-            © 2024 Tanjim. All rights reserved. Crafted with precision and passion for digital innovation.
+            © 2025 Tanjim. All rights reserved. Crafted with precision and passion for digital innovation.
           </p>
         </div>
       </footer>
