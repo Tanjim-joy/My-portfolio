@@ -101,9 +101,9 @@ const Portfolio = () => {
     { name: 'MySQL', level: 90, category: 'Database' },
     { name: 'SQL', level: 90, category: 'Database' },
     { name: 'Git', level: 88, category: 'DevOps' },
-    { name: 'Docker', level: 25, category: 'DevOps' },
-    { name: 'System Design & Architecture', level: 82, category: 'Architecture' },
-    { name: 'Requirements Engineering', level: 90, category: 'Process' },
+    { name: 'Docker', level: 50, category: 'DevOps' },
+    { name: 'System Design & Architecture', level: 78, category: 'Architecture' },
+    { name: 'Requirements Engineering', level: 98, category: 'Process' },
   ];
 
   const experiences = [
@@ -1544,7 +1544,7 @@ const Portfolio = () => {
             margin: '0 auto',
             lineHeight: '1.6'
           }}>
-            © 2025 Tanjim. All rights reserved. Crafted with precision and passion for digital innovation.
+            © 2026 Tanjim. All rights reserved. Crafted with precision and passion for digital innovation.
           </p>
         </div>
       </footer>
