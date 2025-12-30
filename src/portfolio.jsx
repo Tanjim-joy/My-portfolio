@@ -181,12 +181,14 @@ const Portfolio = () => {
           position: 'fixed',
           top: mousePosition.y / 50,
           left: mousePosition.x / 50,
-          width: 'clamp(100px, 20vw, 200px)',
-          height: 'clamp(100px, 20vw, 200px)',
-          background: 'radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%)',
+          width: 'clamp(150px, 25vw, 300px)',
+          height: 'clamp(150px, 25vw, 300px)',
+          background: 'radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.1) 50%, transparent 70%)',
           borderRadius: '50%',
           pointerEvents: 'none',
-          zIndex: 0
+          zIndex: 0,
+          filter: 'blur(60px)',
+          animation: 'float 8s ease-in-out infinite'
         }}
       />
       <div
@@ -194,12 +196,29 @@ const Portfolio = () => {
           position: 'fixed',
           bottom: mousePosition.y / 40,
           right: mousePosition.x / 40,
-          width: 'clamp(80px, 15vw, 150px)',
-          height: 'clamp(80px, 15vw, 150px)',
-          background: 'radial-gradient(circle, rgba(236, 72, 153, 0.1) 0%, transparent 70%)',
+          width: 'clamp(120px, 20vw, 250px)',
+          height: 'clamp(120px, 20vw, 250px)',
+          background: 'radial-gradient(circle, rgba(236, 72, 153, 0.15) 0%, rgba(59, 130, 246, 0.1) 50%, transparent 70%)',
           borderRadius: '50%',
           pointerEvents: 'none',
-          zIndex: 0
+          zIndex: 0,
+          filter: 'blur(60px)',
+          animation: 'float 10s ease-in-out infinite reverse'
+        }}
+      />
+      <div
+        style={{
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '60vw',
+          height: '60vh',
+          background: 'radial-gradient(ellipse, rgba(124, 58, 237, 0.08) 0%, transparent 70%)',
+          borderRadius: '50%',
+          pointerEvents: 'none',
+          zIndex: 0,
+          filter: 'blur(80px)'
         }}
       />
 
