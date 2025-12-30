@@ -1,72 +1,121 @@
-import React, { useState, useEffect, use, useRef  } from 'react';
-import { Database, User, Briefcase, Code, GraduationCap, Mail, Phone, MapPin, Github, Twitter, MessageCircle, Linkedin, Calendar, Award, MessageSquare, ArrowRight, CheckCircle, Sparkles, Star, BookOpen, Trophy } from 'lucide-react';
-
-import { motion } from 'framer-motion';
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  Database, User, Briefcase, Code, GraduationCap, Mail, Phone,
+  MapPin, Github, Linkedin, Calendar, Award, MessageSquare,
+  ArrowRight, CheckCircle, Sparkles, Star, Trophy
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import profileImage from './assets/2.png';
 import emailjs from '@emailjs/browser';
 
-const startdate = new Date(2023, 3, 11);
-const presentDate = new Date();
-const diffInMs = presentDate - startdate;
-const diffInDays = diffInMs / (1000 * 60 * 60 * 24 * 365.25);
-const years = diffInDays.toFixed(1);
+// --- Utility: Experience duration ---
+const startDate = new Date(2023, 3, 11); // April 11, 2023
+const today = new Date();
+const yearsOfExperience = ((today - startDate) / (1000 * 60 * 60 * 24 * 365.25)).toFixed(1);
 
+// --- Skills & Data ---
+const skills = [
+  { name: 'HTML5', level: 95, category: 'Frontend' },
+  { name: 'CSS3', level: 95, category: 'Frontend' },
+  { name: 'Bootstrap', level: 95, category: 'Frontend' },
+  { name: 'JavaScript', level: 80, category: 'Frontend' },
+  { name: 'jQuery', level: 80, category: 'Frontend' },
+  { name: 'React', level: 50, category: 'Frontend' },
+  { name: 'PHP', level: 85, category: 'Backend' },
+  { name: 'Node.js', level: 70, category: 'Backend' },
+  { name: 'C#', level: 90, category: 'Backend' },
+  { name: 'ASP.NET Core', level: 85, category: 'Backend' },
+  { name: 'MySQL / SQL', level: 90, category: 'Database' },
+  { name: 'Git', level: 88, category: 'DevOps' },
+  { name: 'System Design', level: 78, category: 'Architecture' },
+  { name: 'Requirements Eng.', level: 98, category: 'Process' },
+];
 
+const experiences = [
+  {
+    title: 'Deputy Assistant Director',
+    company: 'WALTON Hi-Tech Industries PLC',
+    period: '2023 – Present',
+    description: 'Leading the Manufacturing Automations team in developing robust, scalable web applications that drive operational efficiency and digital transformation.',
+    achievements: [
+      'Developed desktop apps for label printing using C#, .NET, WPF',
+      'Built enterprise web apps with ASP.NET Core & C#',
+      'Led cross-functional teams on complex industrial automation projects',
+      'Designed workflow automation systems for large-scale manufacturing',
+      'Optimized data-intensive apps for performance & security'
+    ],
+    type: 'leadership'
+  },
+  {
+    title: 'Web Application Developer',
+    company: 'WALTON Hi-Tech Industries PLC',
+    period: '2022 – 2023',
+    description: 'Developed business-critical web applications supporting manufacturing operations.',
+    achievements: [
+      'Implemented solutions using PHP, C#, .NET, and relational databases',
+      'Led internal API integration projects',
+      'Improved system performance by 40% via optimization & DB tuning'
+    ],
+    type: 'development'
+  }
+];
+
+const education = [
+  {
+    degree: 'BSc in Computer Science & Engineering',
+    institution: 'City University Bangladesh',
+    period: '2018 – 2022',
+    grade: 'CGPA: 2.95/4.00',
+    type: 'undergraduate'
+  },
+  {
+    degree: 'Diploma in Telecommunication Engineering',
+    institution: 'Institute of Information Technology Bogura',
+    period: '2011 – 2015',
+    grade: 'CGPA: 3.06/4.00',
+    type: 'Diploma'
+  },
+  {
+    degree: 'Web Application Development (ASP.NET)',
+    institution: 'IsDB-BISEW IT Scholarship Program',
+    period: '2021',
+    grade: 'Completed',
+    type: 'Certification'
+  }
+];
 
 const Portfolio = () => {
   const [activeSection, setActiveSection] = useState('about');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isMobile, setIsMobile] = useState(false);
+  const formRef = useRef();
 
-  const handleEmailSubmit = (e) => {
-    e.preventDefault();
-    const form = e.target;    
-    emailjs.sendForm('service_9813qpj', 'template_w58csw3', form, 'mO3ekIk2blRx-9J8d')
-      .then((result) => {
-        console.log('Email sent successfully:', result.text);
-        console.log('Form data:', {name: form.name.value, email: form.email.value, message: form.message.value});
-        form.reset();
-      }, (error) => {
-        console.error('Error sending email:', error.text);
-      });
-  }
-
-  // Check screen size on mount and resize
+  // --- Resize handling ---
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const contaninerStyle = {
-    display : 'grid', 
-    gridTemplateColumns: isMobile ? 'repeat(auto-fit, minmax(350px, 1fr))'  : 'repeat(auto-fit, minmax(600px, 1fr))' , 
-  }
-
+  // --- Mouse parallax background ---
   useEffect(() => {
-    const handleMouseMove = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
+    const handleMouseMove = (e) => setMousePosition({ x: e.clientX, y: e.clientY });
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
+  // --- Active section detection on scroll ---
   useEffect(() => {
     const handleScroll = () => {
       const sections = ['about', 'experience', 'education', 'skills', 'contact'];
-      const scrollPosition = window.scrollY + 100;
-      for (const section of sections) {
-        const element = document.getElementById(section);
-        if (element) {
-          const offsetTop = element.offsetTop;
-          const offsetHeight = element.offsetHeight;
-          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
-            setActiveSection(section);
-            break;
-          }
+      const scrollPos = window.scrollY + 100;
+      for (const id of sections) {
+        const el = document.getElementById(id);
+        if (el && scrollPos >= el.offsetTop && scrollPos < el.offsetTop + el.offsetHeight) {
+          setActiveSection(id);
+          break;
         }
       }
     };
@@ -74,98 +123,72 @@ const Portfolio = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollToSection = (sectionId) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+  const scrollToSection = (id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
     setIsMenuOpen(false);
   };
 
-  const skills = [
-    { name: 'HTML5', level: 95, category: 'Frontend' },
-    { name: 'CSS3', level: 95, category: 'Frontend' },
-    { name: 'Bootstrap', level: 95, category: 'Frontend' },
-    { name: 'JavaScript', level: 80, category: 'Frontend' },
-    { name: 'jQuery', level: 80, category: 'Frontend' },
-    { name: 'React', level: 50, category: 'Frontend' },
-    { name: 'Redux', level: 50, category: 'Frontend' },
-    { name: 'AJAX', level: 85, category: 'Frontend' },
-    { name: 'JSON', level: 85, category: 'Frontend' },
-    { name: 'PHP', level: 85, category: 'Backend' },
-    { name: 'Node.js', level: 70, category: 'Backend' },
-    { name: 'Express', level: 70, category: 'Backend' },
-    { name: 'C#', level: 90, category: 'Backend' },
-    { name: 'ASP.NET Core', level: 85, category: 'Backend' },
-    { name: 'API Development', level: 85, category: 'Backend' },
-    { name: 'MySQL', level: 90, category: 'Database' },
-    { name: 'SQL', level: 90, category: 'Database' },
-    { name: 'Git', level: 88, category: 'DevOps' },
-    { name: 'Docker', level: 50, category: 'DevOps' },
-    { name: 'System Design & Architecture', level: 78, category: 'Architecture' },
-    { name: 'Requirements Engineering', level: 98, category: 'Process' },
-  ];
+  const handleEmailSubmit = (e) => {
+    e.preventDefault();
+    emailjs
+      .sendForm(
+        'service_9813qpj',
+        'template_w58csw3',
+        formRef.current,
+        'mO3ekIk2blRx-9J8d' // ⚠️ In production, use .env
+      )
+      .then(() => {
+        alert('Message sent successfully!');
+        formRef.current.reset();
+      })
+      .catch((err) => {
+        console.error('Failed to send:', err);
+        alert('Failed to send. Please try again.');
+      });
+  };
 
-  const experiences = [
-    {
-      title: 'Deputy Assistant Director',
-      company: 'WALTON Hi-Tech Industries PLC',
-      period: 'Present',
-      description: 'Leading the Manufacturing Automations team in developing robust, scalable web applications that drive operational efficiency and digital transformation in manufacturing processes.',
-      achievements: [
-        'Developed desktop applications for label printing and packing using C#, .NET, and WPF, streamlining production and logistics operations',
-        'Designed and implemented enterprise-level web applications using ASP.NET Core and C#',
-        'Led cross-functional teams to deliver complex projects on time and within budget',
-        'Designed automation systems optimizing business workflows in large-scale industrial environments',
-        'Built and maintained large-scale, data-intensive web applications with focus on performance and security',
-        'Engaged directly with stakeholders to gather and translate business requirements into system designs'
-      ],
-      type: 'leadership'
-    },
-    {
-      title: 'Web Application Developer',
-      company: 'WALTON Hi-Tech Industries PLC',
-      period: '2022 - Present',
-      description: 'Developed business-critical web applications supporting manufacturing operations with focus on scalability and efficiency.',
-      achievements: [
-        'Implemented enterprise-level solutions using PHP, C# & .NET and database technologies',
-        'Led API development projects integrating multiple internal systems',
-        'Improved system performance by 40% through code optimization and database tuning'
-      ],
-      type: 'development'
-    }
-  ];
+  // --- Reusable Section Header ---
+  const SectionHeader = ({ title }) => (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      viewport={{ once: true }}
+      style={{ textAlign: 'center', marginBottom: '3rem' }}
+    >
+      <h2 style={{
+        fontSize: 'clamp(1.8rem, 6vw, 2.8rem)',
+        fontWeight: '800',
+        background: 'linear-gradient(90deg, #a855f7, #ec4899)',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent'
+      }}>{title}</h2>
+      <div style={{
+        width: '60px',
+        height: '3px',
+        background: 'linear-gradient(90deg, #a855f7, #ec4899)',
+        margin: '0.75rem auto',
+        borderRadius: '2px'
+      }}></div>
+    </motion.div>
+  );
 
-  const education = [
-    {
-      degree: 'Bachelor of Science in Computer Science & Engineering',
-      institution: 'City University Bangladesh',
-      period: '2018 - 2022',
-      grade: 'CGPA: 2.95/4.00',
-      type: 'undergraduate'
-    },
-    {
-      degree: 'Diploma in Telecommunication Engineering',
-      institution: 'Institute of Information Technology Bogura',
-      period: '2011 - 2015',
-      grade: 'CGPA: 3.06/4.00',
-      type: 'Diploma'
-    },
-    {
-      degree: 'Secondary School Certificate (Electrical)',
-      institution: 'Technical Secondary School & College Chapainawabganj',
-      period: '2010',
-      grade: 'GPA: 3.82/5.00',
-      type: 'SSC'
-    },
-    {
-      degree: 'Web Application Development Using ASP.NET',
-      institution: 'IsDB-BISEW IT Scholarship Program',
-      period: '2021',
-      grade: 'Completed',
-      type: 'Certification'
-    }
-  ];
+  // --- Card Wrapper ---
+  const Card = ({ children, className = '' }) => (
+    <div
+      style={{
+        background: 'rgba(30, 41, 59, 0.6)',
+        backdropFilter: 'blur(20px)',
+        borderRadius: '1.5rem',
+        padding: '2rem',
+        border: '1px solid rgba(139, 92, 246, 0.3)',
+        boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)'
+      }}
+      className={className}
+    >
+      {children}
+    </div>
+  );
 
   return (
     <div style={{
@@ -175,33 +198,29 @@ const Portfolio = () => {
       fontFamily: "'Inter', sans-serif",
       overflowX: 'hidden'
     }}>
-      {/* Animated Background Elements */}
-      <div
-        style={{
-          position: 'fixed',
-          top: mousePosition.y / 50,
-          left: mousePosition.x / 50,
-          width: 'clamp(100px, 20vw, 200px)',
-          height: 'clamp(100px, 20vw, 200px)',
-          background: 'radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%)',
-          borderRadius: '50%',
-          pointerEvents: 'none',
-          zIndex: 0
-        }}
-      />
-      <div
-        style={{
-          position: 'fixed',
-          bottom: mousePosition.y / 40,
-          right: mousePosition.x / 40,
-          width: 'clamp(80px, 15vw, 150px)',
-          height: 'clamp(80px, 15vw, 150px)',
-          background: 'radial-gradient(circle, rgba(236, 72, 153, 0.1) 0%, transparent 70%)',
-          borderRadius: '50%',
-          pointerEvents: 'none',
-          zIndex: 0
-        }}
-      />
+      {/* Animated Background */}
+      <div style={{
+        position: 'fixed',
+        top: mousePosition.y / 50,
+        left: mousePosition.x / 50,
+        width: 'clamp(100px, 20vw, 200px)',
+        height: 'clamp(100px, 20vw, 200px)',
+        background: 'radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%)',
+        borderRadius: '50%',
+        pointerEvents: 'none',
+        zIndex: 0
+      }} />
+      <div style={{
+        position: 'fixed',
+        bottom: mousePosition.y / 40,
+        right: mousePosition.x / 40,
+        width: 'clamp(80px, 15vw, 150px)',
+        height: 'clamp(80px, 15vw, 150px)',
+        background: 'radial-gradient(circle, rgba(236, 72, 153, 0.1) 0%, transparent 70%)',
+        borderRadius: '50%',
+        pointerEvents: 'none',
+        zIndex: 0
+      }} />
 
       {/* Navigation */}
       <nav style={{
@@ -217,33 +236,29 @@ const Portfolio = () => {
         <div style={{
           maxWidth: '1400px',
           margin: '0 auto',
-          padding: '0 clamp(1rem, 4vw, 2rem)',
+          padding: '0 2rem',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          height: 'clamp(60px, 10vh, 80px)'
+          height: '80px'
         }}>
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
             style={{
-              fontSize: 'clamp(1.2rem, 4vw, 1.8rem)',
-              fontWeight: 'bold',
+              fontSize: '1.5rem',
+              fontWeight: '800',
               background: 'linear-gradient(90deg, #a855f7, #ec4899)',
               WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              letterSpacing: '0.5px'
+              WebkitTextFillColor: 'transparent'
             }}
           >
-            Tangimul Haque
+            Tanjim
           </motion.div>
 
-          {/* Desktop Navigation - hidden on mobile */}
-          <div style={{
-            display: isMobile ? 'none' : 'flex',
-            gap: 'clamp(1rem, 3vw, 2.5rem)'
-          }}>
+          {/* Desktop Nav */}
+          <div style={{ display: isMobile ? 'none' : 'flex', gap: '2rem' }}>
             {['about', 'experience', 'education', 'skills', 'contact'].map((item) => (
               <motion.button
                 key={item}
@@ -251,15 +266,14 @@ const Portfolio = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 style={{
-                  position: 'relative',
                   background: 'transparent',
-                  textTransform: 'capitalize',
                   border: 'none',
-                  paddingBottom: '4px',
                   color: activeSection === item ? '#a855f7' : '#cbd5e1',
                   fontWeight: activeSection === item ? '600' : '400',
-                  fontSize: 'clamp(0.9rem, 2.5vw, 1rem)',
-                  cursor: 'pointer'
+                  fontSize: '1rem',
+                  cursor: 'pointer',
+                  textTransform: 'capitalize',
+                  paddingBottom: '4px'
                 }}
               >
                 {item}
@@ -277,24 +291,16 @@ const Portfolio = () => {
                     }}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ duration: 0.3 }}
                   />
                 )}
               </motion.button>
             ))}
           </div>
 
-          {/* Mobile Menu Button - hidden on desktop */}
+          {/* Mobile Menu Button */}
           <motion.button
-            whileTap={{ scale: 0.95 }}
-            style={{
-              display: isMobile ? 'block' : 'none',
-              color: 'white',
-              background: 'transparent',
-              border: 'none',
-              cursor: 'pointer',
-              padding: '8px'
-            }}
+            whileTap={{ scale: 0.9 }}
+            style={{ display: isMobile ? 'block' : 'none', background: 'none', border: 'none', color: 'white' }}
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             <svg width="28" height="28" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -303,137 +309,97 @@ const Portfolio = () => {
           </motion.button>
         </div>
 
-        {/* Mobile Menu - only shown on mobile when isMenuOpen is true */}
-        {isMobile && isMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            style={{
-              background: 'rgba(15, 23, 42, 0.98)',
-              backdropFilter: 'blur(20px)',
-              padding: '1rem',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '0.5rem',
-              position: 'absolute',
-              top: 'clamp(60px, 10vh, 80px)',
-              width: '100%',
-              zIndex: 999,
-              borderTop: '1px solid rgba(139, 92, 246, 0.3)'
-            }}
-          >
-            {['about', 'experience', 'education', 'skills', 'contact'].map((item) => (
-              <motion.button
-                key={item}
-                onClick={() => {
-                  scrollToSection(item);
-                  setIsMenuOpen(false);
-                }}
-                whileHover={{ x: 10 }}
-                style={{
-                  padding: '1rem',
-                  background: activeSection === item ? 'rgba(139, 92, 246, 0.2)' : 'transparent',
-                  border: 'none',
-                  color: activeSection === item ? '#a855f7' : '#cbd5e1',
-                  textTransform: 'capitalize',
-                  fontSize: '1.1rem',
-                  textAlign: 'left',
-                  cursor: 'pointer',
-                  borderRadius: '4px'
-                }}
-              >
-                {item}
-              </motion.button>
-            ))}
-          </motion.div>
-        )}
+        {/* Mobile Menu Dropdown */}
+        <AnimatePresence>
+          {isMobile && isMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+              style={{
+                background: 'rgba(15, 23, 42, 0.98)',
+                padding: '1rem',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.75rem',
+                position: 'absolute',
+                top: '80px',
+                width: '100%',
+                borderTop: '1px solid rgba(139, 92, 246, 0.3)'
+              }}
+            >
+              {['about', 'experience', 'education', 'skills', 'contact'].map((item) => (
+                <button
+                  key={item}
+                  onClick={() => {
+                    scrollToSection(item);
+                    setIsMenuOpen(false);
+                  }}
+                  style={{
+                    padding: '1rem',
+                    background: activeSection === item ? 'rgba(139, 92, 246, 0.2)' : 'transparent',
+                    border: 'none',
+                    color: activeSection === item ? '#a855f7' : '#cbd5e1',
+                    textAlign: 'left',
+                    borderRadius: '6px',
+                    fontSize: '1.1rem'
+                  }}
+                >
+                  {item.charAt(0).toUpperCase() + item.slice(1)}
+                </button>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
-      {/* Hero Section */}
-      <section style={{
-        padding: 'clamp(4rem, 15vh, 10rem) clamp(1rem, 4vw, 2rem) clamp(4rem, 10vh, 8rem)',
-        position: 'relative',
-        overflow: 'hidden'
-      }}>
-        <div style={{
-          maxWidth: '1400px',
-          margin: '0 auto',
-          position: 'relative',
-          zIndex: 1
-        }}>
+
+      {/* Hero */}
+      <section style={{ paddingTop: '120px', paddingBottom: '6rem', paddingInline: '2rem' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: 'clamp(1rem, 5vw, 4rem)',
+            gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+            gap: '4rem',
             alignItems: 'center'
-          }} className="hero-grid">
+          }}>
             <motion.div
-              initial={{ opacity: 0, y: 50 }}
+              initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: 'easeOut' }}
+              transition={{ duration: 0.8 }}
             >
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '1rem',
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
+                <Sparkles color="#a855f7" />
+                <span style={{
+                  background: 'linear-gradient(90deg, #a855f7, #ec4899)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  fontWeight: '700'
+                }}>Manufacturing Technology</span>
+              </div>
+              <h1 style={{
+                fontSize: 'clamp(2rem, 8vw, 3.2rem)',
+                fontWeight: '900',
+                lineHeight: 1.1,
                 marginBottom: '1.5rem'
               }}>
-                <Sparkles style={{
-                  color: '#a855f7',
-                  width: 'clamp(1.5rem, 5vw, 2rem)',
-                  height: 'clamp(1.5rem, 5vw, 2rem)'
-                }} />
+                Deputy Assistant <br />
                 <span style={{
                   background: 'linear-gradient(90deg, #a855f7, #ec4899)',
                   WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  fontWeight: '800',
-                  fontSize: 'clamp(0.9rem, 3vw, 1.1rem)'
-                }}>
-                  Manufacturing Technology
-                </span>
-              </div>
-
-              <h1 style={{
-                fontSize: 'clamp(1.8rem, 6vw, 3.5rem)',
-                fontWeight: 'bold',
-                marginBottom: '1.5rem',
-                lineHeight: '1.1',
-                letterSpacing: '-0.02em'
-              }}>
-                <span style={{ display: 'block' }}>Deputy Assistant</span>
-                <span style={{
-                  display: 'block',
-                  background: 'linear-gradient(90deg, #a855f7, #ec4899)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  marginTop: '0.25rem'
-                }}>
-                  Director
-                </span>
+                  WebkitTextFillColor: 'transparent'
+                }}>Director</span>
               </h1>
-
-              <p style={{
-                fontSize: 'clamp(0.9rem, 2.5vw, 1.25rem)',
-                color: '#cbd5e1',
-                marginBottom: 'clamp(1.5rem, 4vw, 2.5rem)',
-                lineHeight: '1.7',
-                maxWidth: '90%'
-              }}>
-                Building robust, scalable web applications that drive operational efficiency and digital transformation in manufacturing processes.
+              <p style={{ color: '#cbd5e1', lineHeight: 1.7, marginBottom: '2rem' }}>
+                Building robust, scalable web applications that drive operational efficiency and digital transformation in manufacturing.
               </p>
-
-              <div style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: 'clamp(0.75rem, 2vw, 1.25rem)'
-              }}>
+              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                 <motion.button
-                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileHover={{ scale: 1.05, y: -3 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => scrollToSection('contact')}
                   style={{
-                    padding: 'clamp(0.5rem, 2vw, 0.875rem) clamp(1rem, 3vw, 2.25rem)',
+                    padding: '0.875rem 2rem',
                     background: 'linear-gradient(90deg, #7c3aed, #db2777)',
                     borderRadius: '0.75rem',
                     fontWeight: '600',
@@ -442,55 +408,41 @@ const Portfolio = () => {
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '0.75rem',
-                    boxShadow: '0 10px 25px rgba(124, 58, 237, 0.3)',
-                    fontSize: 'clamp(0.9rem, 2.5vw, 1rem)'
+                    gap: '0.5rem'
                   }}
                 >
-                  Get In Touch
-                  <ArrowRight style={{ width: 'clamp(1rem, 3vw, 1.25rem)', height: 'clamp(1rem, 3vw, 1.25rem)' }} />
+                  Get In Touch <ArrowRight size={18} />
                 </motion.button>
-
                 <motion.button
-                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileHover={{ scale: 1.05, y: -3 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => scrollToSection('experience')}
                   style={{
-                    padding: 'clamp(0.5rem, 2vw, 0.875rem) clamp(1rem, 3vw, 2.25rem)',
+                    padding: '0.875rem 2rem',
                     border: '2px solid rgba(139, 92, 246, 0.5)',
                     borderRadius: '0.75rem',
                     fontWeight: '600',
-                    background: 'rgba(139, 92, 246, 0.1)',
+                    background: 'transparent',
                     color: 'white',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '0.75rem',
-                    fontSize: 'clamp(0.9rem, 2.5vw, 1rem)'
+                    gap: '0.5rem'
                   }}
                 >
-                  View Experience
-                  <Briefcase style={{ width: 'clamp(1rem, 3vw, 1.25rem)', height: 'clamp(1rem, 3vw, 1.25rem)' }} />
+                  View Experience <Briefcase size={18} />
                 </motion.button>
               </div>
             </motion.div>
 
+            {/* Profile Image */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              style={{
-                position: 'relative',
-                justifySelf: 'center',
-                width: '100%',
-                maxWidth: 'clamp(250px, 50vw, 400px)'
-              }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              style={{ justifySelf: 'center' }}
             >
-              <div style={{
-                position: 'relative',
-                width: '100%',
-                aspectRatio: '1/1'
-              }}>
+              <div style={{ position: 'relative', width: '280px', height: '280px', margin: '0 auto' }}>
                 <div style={{
                   position: 'absolute',
                   inset: 0,
@@ -500,1137 +452,394 @@ const Portfolio = () => {
                   opacity: 0.4,
                   animation: 'pulse 3s infinite alternate'
                 }}></div>
-
                 <div style={{
-                  position: 'absolute',
-                  inset: '8px',
+                  position: 'relative',
+                  width: '100%',
+                  height: '100%',
                   background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.8))',
                   borderRadius: '50%',
                   border: '3px solid rgba(139, 92, 246, 0.4)',
-                  backdropFilter: 'blur(20px)',
+                  backdropFilter: 'blur(10px)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)',
                   overflow: 'hidden'
                 }}>
                   <img
                     src={profileImage}
-                    alt="Profile"
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                      borderRadius: '50%'
-                    }}
+                    alt="Tanjim - Deputy Assistant Director at WALTON"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
                   />
                 </div>
-
-                <motion.div
-                  animate={{ y: [0, -10, 0], rotate: [0, 5, 0] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                  style={{
-                    position: 'absolute',
-                    top: '10%',
-                    right: '10%',
-                    background: 'rgba(236, 72, 153, 0.2)',
-                    borderRadius: '50%',
-                    width: 'clamp(30px, 8vw, 40px)',
-                    height: 'clamp(30px, 8vw, 40px)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    border: '1px solid rgba(236, 72, 153, 0.3)'
-                  }}
-                >
-                  <Code style={{ color: '#ec4899', width: 'clamp(16px, 4vw, 20px)', height: 'clamp(16px, 4vw, 20px)' }} />
-                </motion.div>
-
-                <motion.div
-                  animate={{ y: [0, 10, 0], rotate: [0, -5, 0] }}
-                  transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-                  style={{
-                    position: 'absolute',
-                    bottom: '15%',
-                    left: '15%',
-                    background: 'rgba(139, 92, 246, 0.2)',
-                    borderRadius: '50%',
-                    width: 'clamp(20px, 6vw, 30px)',
-                    height: 'clamp(20px, 6vw, 30px)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    border: '1px solid rgba(139, 92, 246, 0.3)'
-                  }}
-                >
-                  <Database style={{ color: '#a855f7', width: 'clamp(12px, 3vw, 16px)', height: 'clamp(12px, 3vw, 16px)' }} />
-                </motion.div>
               </div>
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* About Section */}
-      <section id="about" style={{
-        padding: 'clamp(3rem, 10vh, 6rem) clamp(1rem, 4vw, 2rem)',
-        position: 'relative',
-        overflow: 'hidden'
-      }}>
-        <div style={{
-          maxWidth: '1400px',
-          margin: '0 auto',
-          position: 'relative',
-          zIndex: 1
-        }}>
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            style={{ textAlign: 'center', marginBottom: 'clamp(2rem, 6vw, 4rem)' }}
-          >
-            <h2 style={{
-              fontSize: 'clamp(1.5rem, 5vw, 3rem)',
-              fontWeight: 'bold',
-              marginBottom: '1.5rem',
-              background: 'linear-gradient(90deg, #a855f7, #ec4899)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent'
-            }}>About Me</h2>
-            <div style={{
-              width: '6rem',
-              height: '3px',
-              background: 'linear-gradient(90deg, #a855f7, #ec4899)',
-              margin: '0 auto',
-              borderRadius: '2px'
-            }}></div>
-          </motion.div>
-
+      {/* About */}
+      <section id="about" style={{ padding: '6rem 2rem' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+          <SectionHeader title="About Me" />
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: 'clamp(1.5rem, 4vw, 3rem)'
-          }} className="about-grid">
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-              style={{
-                background: 'rgba(30, 41, 59, 0.6)',
-                backdropFilter: 'blur(20px)',
-                borderRadius: '1.5rem',
-                padding: 'clamp(1.5rem, 4vw, 2.5rem)',
-                border: '1px solid rgba(139, 92, 246, 0.3)',
-                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)'
-              }}
-            >
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '1rem',
-                marginBottom: '2rem'
-              }}>
-                <Briefcase style={{
-                  color: '#a855f7',
-                  width: 'clamp(1.5rem, 5vw, 2rem)',
-                  height: 'clamp(1.5rem, 5vw, 2rem)'
-                }} />
+            gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+            gap: '2.5rem'
+          }}>
+            <Card>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
+                <Briefcase color="#a855f7" size={28} />
                 <h3 style={{
-                  fontSize: 'clamp(1.25rem, 3vw, 1.75rem)',
-                  fontWeight: 'bold',
+                  fontSize: '1.5rem',
+                  fontWeight: '700',
                   background: 'linear-gradient(90deg, #a855f7, #ec4899)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent'
                 }}>Professional Journey</h3>
               </div>
-
-              <p style={{
-                color: '#cbd5e1',
-                marginBottom: '2rem',
-                lineHeight: '1.8',
-                fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
-                textAlign: 'justify'
-              }}>
-                I am currently serving as Deputy Assistant Director in the Manufacturing Automations team at WALTON Hi-Tech Industries PLC, within the WALTON ICT Department. With {years} years of professional experience, 
-                I specialize in developing robust, scalable, and business-critical web and desktop applications that drive operational efficiency and digital transformation in manufacturing processes. 
-                I have hands-on experience designing end-to-end solutions—requirements collection, system design, implementation, testing, and deployment—focused on real business impact and operational reliability.
+              <p style={{ color: '#cbd5e1', lineHeight: 1.8, marginBottom: '2rem' }}>
+                I am currently serving as Deputy Assistant Director in the Manufacturing Automations team at WALTON Hi-Tech Industries PLC.
+                With {yearsOfExperience} years of professional experience, I specialize in developing robust, scalable, and business-critical applications that drive operational efficiency.
               </p>
-
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-                gap: 'clamp(1rem, 3vw, 2rem)'
-              }}>
-                {[
-                  { icon: <Award />, label: 'Experience', value: `${years} Years` },
-                  { icon: <Code />, label: 'Specialization', value: 'Web Applications' },
-                  { icon: <Briefcase />, label: 'Current Role', value: 'Deputy Assistant Director' },
-                  { icon: <Calendar />, label: 'Industry', value: 'Manufacturing Tech' }
-                ].map((item, index) => (
-                  <div key={index} style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '1rem',
-                    padding: '1rem',
-                    background: 'rgba(15, 23, 42, 0.5)',
-                    borderRadius: '1rem',
-                    border: '1px solid rgba(139, 92, 246, 0.2)'
-                  }}>
-                    <div style={{
-                      background: 'rgba(139, 92, 246, 0.2)',
-                      padding: '0.75rem',
-                      borderRadius: '50%',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}>
-                      {item.icon}
-                    </div>
-                    <div>
-                      <p style={{
-                        fontWeight: '600',
-                        color: '#a855f7',
-                        marginBottom: '0.25rem',
-                        fontSize: 'clamp(0.8rem, 2.5vw, 1rem)'
-                      }}>{item.label}</p>
-                      <p style={{
-                        color: '#cbd5e1',
-                        fontSize: 'clamp(0.7rem, 2vw, 0.9rem)'
-                      }}>{item.value}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-              style={{
-                background: 'rgba(30, 41, 59, 0.6)',
-                backdropFilter: 'blur(20px)',
-                borderRadius: '1.5rem',
-                padding: 'clamp(1.5rem, 4vw, 2.5rem)',
-                border: '1px solid rgba(139, 92, 246, 0.3)',
-                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)'
-              }}
-            >
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '1rem',
-                marginBottom: '2rem'
-              }}>
-                <Star style={{
-                  color: '#a855f7',
-                  width: 'clamp(1.5rem, 5vw, 2rem)',
-                  height: 'clamp(1.5rem, 5vw, 2rem)'
-                }} />
+            </Card>
+            <Card>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
+                <Star color="#a855f7" size={28} />
                 <h3 style={{
-                  fontSize: 'clamp(1.25rem, 3vw, 1.75rem)',
-                  fontWeight: 'bold',
+                  fontSize: '1.5rem',
+                  fontWeight: '700',
                   background: 'linear-gradient(90deg, #a855f7, #ec4899)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent'
                 }}>Core Expertise</h3>
               </div>
-
-              <div style={{ display: 'grid', gap: '1.5rem' }}>
+              <div style={{ display: 'grid', gap: '1.25rem' }}>
                 {[
-                  { title: 'System Architecture', desc: 'Designing scalable, maintainable systems for enterprise applications' },
-                  { title: 'Process Optimization', desc: 'Streamlining manufacturing workflows through digital solutions' },
-                  { title: 'Full Stack Development', desc: 'Building end-to-end web applications with modern technologies' },              
-                  { title: 'Localization & Normalization', desc: 'Implementing multilingual support and data normalization for seamless user experience across Bangla and English' },              
-                  { title: 'Technical Troubleshooting', desc: 'Diagnosing and resolving complex logic issues with precision and speed' },
-                  { title: 'Stakeholder Management', desc: 'Bridging technical and business requirements effectively' },
-                  { title: 'Reporting & Analytics', desc: 'Crafting insightful, real-time reporting tools for data-driven decision-making in manufacturing environments'}
-                ].map((item, index) => (
-                  <div key={index} style={{
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    gap: '1rem',
-                    padding: '1rem',
-                    background: 'rgba(15, 23, 42, 0.5)',
-                    borderRadius: '1rem',
-                    border: '1px solid rgba(139, 92, 246, 0.2)'
-                  }}>
-                    <CheckCircle style={{
-                      color: '#10b981',
-                      width: 'clamp(1.2rem, 3vw, 1.5rem)',
-                      height: 'clamp(1.2rem, 3vw, 1.5rem)',
-                      flexShrink: 0,
-                      marginTop: '0.25rem'
-                    }} />
-                    <div>
-                      <h4 style={{
-                        fontWeight: '600',
-                        color: 'white',
-                        marginBottom: '0.25rem',
-                        fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)'
-                      }}>{item.title}</h4>
-                      <p style={{
-                        color: '#cbd5e1',
-                        fontSize: 'clamp(0.8rem, 2vw, 0.95rem)'
-                      }}>{item.desc}</p>
-                    </div>
+                  'System Architecture & Scalable Design',
+                  'Manufacturing Process Optimization',
+                  'Full Stack Web Development (C#, PHP, React)',
+                  'Multilingual Support (Bangla/English)',
+                  'Technical Troubleshooting & Debugging',
+                  'Stakeholder Requirement Translation',
+                  'Real-time Reporting & Analytics'
+                ].map((item, i) => (
+                  <div key={i} style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+                    <CheckCircle color="#10b981" size={20} style={{ marginTop: '0.25rem' }} />
+                    <span>{item}</span>
                   </div>
                 ))}
               </div>
-            </motion.div>
+            </Card>
           </div>
         </div>
       </section>
 
-      {/* Experience Section */}
-      <section id="experience" style={{
-        padding: 'clamp(3rem, 10vh, 6rem) clamp(1rem, 4vw, 2rem)',
-        background: 'rgba(15, 23, 42, 0.3)',
-        position: 'relative',
-        overflow: 'hidden'
-      }}>
-        <div style={{
-          maxWidth: '1400px',
-          margin: '0 auto',
-          position: 'relative',
-          zIndex: 1
-        }}>
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            style={{ textAlign: 'center', marginBottom: 'clamp(2rem, 6vw, 4rem)' }}
-          >
-            <h2 style={{
-              fontSize: 'clamp(1.5rem, 5vw, 3rem)',
-              fontWeight: 'bold',
-              marginBottom: '1.5rem',
-              background: 'linear-gradient(90deg, #a855f7, #ec4899)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent'
-            }}>Work Experience</h2>
-            <div style={{
-              width: '6rem',
-              height: '3px',
-              background: 'linear-gradient(90deg, #a855f7, #ec4899)',
-              margin: '0 auto',
-              borderRadius: '2px'
-            }}></div>
-          </motion.div>
-
-          <div style={{ display: 'grid', gap: 'clamp(1.5rem, 4vw, 2.5rem)' }}>
-            {experiences.map((exp, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: index * 0.2 }}
-                viewport={{ once: true }}
-                style={{
-                  background: 'rgba(30, 41, 59, 0.6)',
-                  backdropFilter: 'blur(20px)',
-                  borderRadius: '1.5rem',
-                  padding: 'clamp(1.5rem, 4vw, 2.5rem)',
-                  border: '1px solid rgba(139, 92, 246, 0.3)',
-                  boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)',
-                  position: 'relative',
-                  overflow: 'hidden'
-                }}
-              >
+      {/* Experience */}
+      <section id="experience" style={{ padding: '6rem 2rem', background: 'rgba(15, 23, 42, 0.2)' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+          <SectionHeader title="Work Experience" />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+            {experiences.map((exp, i) => (
+              <Card key={i} style={{ position: 'relative' }}>
                 <div style={{
                   position: 'absolute',
                   top: 0,
                   left: 0,
-                  width: '5px',
+                  width: '6px',
                   height: '100%',
-                  background: exp.type === 'leadership' ?
-                    'linear-gradient(to bottom, #a855f7, #ec4899)' :
-                    'linear-gradient(to bottom, #3b82f6, #1d4ed8)',
+                  background: exp.type === 'leadership' 
+                    ? 'linear-gradient(to bottom, #a855f7, #ec4899)' 
+                    : 'linear-gradient(to bottom, #3b82f6, #1d4ed8)',
                   borderRadius: '1.5rem 0 0 1.5rem'
                 }}></div>
-
+                <h3 style={{ color: '#a855f7', fontSize: '1.4rem', marginBottom: '0.5rem' }}>{exp.title}</h3>
+                <p style={{ color: '#cbd5e1', marginBottom: '0.5rem' }}>{exp.company}</p>
                 <div style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '1rem',
-                  marginBottom: '2rem'
-                }} className="experience-header">
-                  <div>
-                    <h3 style={{
-                      fontSize: 'clamp(1.25rem, 3vw, 1.75rem)',
-                      fontWeight: 'bold',
-                      color: '#a855f7',
-                      marginBottom: '0.5rem'
-                    }}>{exp.title}</h3>
-                    <p style={{
-                      fontSize: 'clamp(0.9rem, 2.5vw, 1.25rem)',
-                      color: '#cbd5e1',
-                      fontWeight: '500'
-                    }}>{exp.company}</p>
-                  </div>
-                  <div style={{
-                    background: 'rgba(124, 58, 237, 0.2)',
-                    padding: '0.75rem 1.5rem',
-                    borderRadius: '9999px',
-                    color: '#c084fc',
-                    fontWeight: '600',
-                    border: '1px solid rgba(139, 92, 246, 0.3)',
-                    fontSize: 'clamp(0.8rem, 2vw, 1rem)'
-                  }}>
-                    {exp.period}
-                  </div>
-                </div>
-
-                <p style={{
-                  color: '#cbd5e1',
-                  marginBottom: '2rem',
-                  lineHeight: '1.8',
-                  fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)'
-                }}>{exp.description}</p>
-
-                <h4 style={{
-                  fontWeight: '600',
-                  fontSize: 'clamp(1rem, 2.5vw, 1.25rem)',
+                  background: 'rgba(124, 58, 237, 0.2)',
+                  display: 'inline-block',
+                  padding: '0.375rem 1rem',
+                  borderRadius: '9999px',
                   marginBottom: '1.5rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.75rem'
-                }}>
-                  <Star style={{
-                    color: '#a855f7',
-                    width: 'clamp(1.2rem, 3vw, 1.5rem)',
-                    height: 'clamp(1.2rem, 3vw, 1.5rem)'
-                  }} />
-                  Key Achievements
-                </h4>
-
-                <ul style={{ display: 'grid', gap: '1rem' }}>
-                  {exp.achievements.map((achievement, i) => (
-                    <li key={i} style={{
-                      display: 'flex',
-                      alignItems: 'flex-start',
-                      gap: '1rem',
-                      padding: '1rem',
-                      background: 'rgba(15, 23, 42, 0.5)',
-                      borderRadius: '1rem',
-                      border: '1px solid rgba(139, 92, 246, 0.2)'
-                    }}>
-                      <div style={{
-                        background: 'linear-gradient(90deg, #a855f7, #ec4899)',
-                        width: '8px',
-                        height: '8px',
-                        borderRadius: '50%',
-                        marginTop: '0.75rem',
-                        flexShrink: 0
-                      }}></div>
-                      <span style={{
-                        color: '#cbd5e1',
-                        lineHeight: '1.6',
-                        fontSize: 'clamp(0.85rem, 2.5vw, 1rem)'
-                      }}>{achievement}</span>
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
+                  fontSize: '0.9rem'
+                }}>{exp.period}</div>
+                <p style={{ color: '#cbd5e1', marginBottom: '1.5rem' }}>{exp.description}</p>
+                <div>
+                  <h4 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
+                    <Star size={18} color="#a855f7" /> Key Achievements
+                  </h4>
+                  <ul style={{ paddingLeft: '1.5rem' }}>
+                    {exp.achievements.map((ach, j) => (
+                      <li key={j} style={{ marginBottom: '0.75rem', color: '#cbd5e1' }}>{ach}</li>
+                    ))}
+                  </ul>
+                </div>
+              </Card>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Education Section */}
-      <section id="education" style={{
-        padding: 'clamp(3rem, 10vh, 6rem) clamp(1rem, 4vw, 2rem)',
-        background: 'rgba(15, 25, 48, 0.3)',
-        position: 'relative',
-        overflow: 'hidden'
-      }}>
-        <div style={{
-          maxWidth: '1400px',
-          margin: '0 auto',
-          position: 'relative',
-          zIndex: 1
-        }}>
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            style={{ textAlign: 'center', marginBottom: 'clamp(2rem, 6vw, 4rem)' }}
-          >
-            <h2 style={{
-              fontSize: 'clamp(1.5rem, 5vw, 3rem)',
-              fontWeight: 'bold',
-              marginBottom: '1.5rem',
-              background: 'linear-gradient(90deg, #a855f7, #ec4899)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent'
-            }}>Education</h2>
-            <div style={{
-              width: '6rem',
-              height: '3px',
-              background: 'linear-gradient(90deg, #a855f7, #ec4899)',
-              margin: '0 auto',
-              borderRadius: '2px'
-            }}></div>
-          </motion.div>
-
+      {/* Education */}
+      <section id="education" style={{ padding: '6rem 2rem', background: 'rgba(15, 25, 48, 0.2)' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+          <SectionHeader title="Education" />
           <div style={{
             display: 'grid',
-            contaninerStyle,
-            gap: 'clamp(1.5rem, 4vw, 2rem)'
+            gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)',
+            gap: '2rem'
           }}>
-            {education.map((edu, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: index * 0.2 }}
-                viewport={{ once: true }}
-                style={{
-                  background: 'rgba(30, 41, 59, 0.6)',
-                  backdropFilter: 'blur(20px)',
-                  borderRadius: '1.5rem',
-                  padding: 'clamp(1.5rem, 4vw, 2.5rem)',
-                  border: '1px solid rgba(139, 92, 246, 0.3)',
-                  boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)',
-                  position: 'relative',
-                  overflow: 'hidden'
-                }}
-              >
+            {education.map((edu, i) => (
+              <Card key={i} style={{ position: 'relative' }}>
                 <div style={{
                   position: 'absolute',
                   top: 0,
                   left: 0,
-                  width: '5px',
+                  width: '6px',
                   height: '100%',
-                  background: edu.type === 'undergraduate' ?
-                    'linear-gradient(to bottom, #a855f7, #ec4899)' :
-                    'linear-gradient(to bottom, #3b82f6, #1d4ed8)',
+                  background: edu.type === 'undergraduate'
+                    ? 'linear-gradient(to bottom, #a855f7, #ec4899)'
+                    : 'linear-gradient(to bottom, #3b82f6, #1d4ed8)',
                   borderRadius: '1.5rem 0 0 1.5rem'
                 }}></div>
-
-                <div style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '1rem',
-                  marginBottom: '2rem'
-                }} className="education-header">
-                  <div>
-                    <h3 style={{
-                      fontSize: 'clamp(1rem, 2.5vw, 1.4rem)',
-                      fontWeight: 'bold',
-                      color: '#a855f7',
-                      marginBottom: '0.4rem',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.75rem'
-                    }}>
-                      <GraduationCap style={{
-                        width: 'clamp(1.5rem, 5vw, 2rem)',
-                        height: 'clamp(1.5rem, 5vw, 2rem)'
-                      }} />
-                      {edu.degree}
-                    </h3>
-                    <p style={{
-                      fontSize: 'clamp(0.9rem, 2.5vw, 1.25rem)',
-                      color: '#cbd5e1',
-                      fontWeight: '400'
-                    }}>{edu.institution}</p>
-                  </div>
-                  <div style={{
-                    background: 'rgba(124, 58, 237, 0.2)',
-                    padding: '0.75rem 1.5rem',
-                    borderRadius: '9999px',
-                    color: '#c084fc',
-                    fontWeight: '600',
-                    border: '1px solid rgba(139, 92, 246, 0.3)',
-                    fontSize: 'clamp(0.8rem, 2vw, 1rem)'
-                  }}>
-                    {edu.period}
-                  </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
+                  <GraduationCap size={24} />
+                  <h3 style={{ color: '#a855f7', fontSize: '1.2rem' }}>{edu.degree}</h3>
                 </div>
-
+                <p style={{ color: '#cbd5e1', marginBottom: '0.5rem' }}>{edu.institution}</p>
                 <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  marginBottom: '2rem',
-                  padding: '1rem',
-                  background: 'rgba(15, 23, 42, 0.5)',
-                  borderRadius: '1rem',
-                  border: '1px solid rgba(139, 92, 246, 0.2)'
-                }}>
-                  <Trophy style={{
-                    color: '#10b981',
-                    width: 'clamp(1.2rem, 3vw, 1.5rem)',
-                    height: 'clamp(1.2rem, 3vw, 1.5rem)'
-                  }} />
-                  <span style={{
-                    color: '#10b981',
-                    fontWeight: '600',
-                    fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)'
-                  }}>
-                    {edu.grade}
-                  </span>
+                  background: 'rgba(124, 58, 237, 0.2)',
+                  display: 'inline-block',
+                  padding: '0.375rem 1rem',
+                  borderRadius: '9999px',
+                  marginBottom: '1rem',
+                  fontSize: '0.9rem'
+                }}>{edu.period}</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(15, 23, 42, 0.5)', padding: '0.75rem 1rem', borderRadius: '1rem' }}>
+                  <Trophy color="#10b981" size={18} />
+                  <span style={{ color: '#10b981', fontWeight: '600' }}>{edu.grade}</span>
                 </div>
-              </motion.div>
+              </Card>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Skills Section */}
-      <section id="skills" style={{
-        padding: 'clamp(3rem, 10vh, 6rem) clamp(1rem, 4vw, 2rem)',
-        background: 'rgba(15, 25, 48, 0.3)',
-        position: 'relative',
-        overflow: 'hidden'
-      }}>
-        <div style={{
-          maxWidth: '1400px',
-          margin: '0 auto',
-          position: 'relative',
-          zIndex: 1
-        }}>
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            style={{ textAlign: 'center', marginBottom: 'clamp(2rem, 6vw, 4rem)' }}
-          >
-            <h2 style={{
-              fontSize: 'clamp(1.5rem, 5vw, 3rem)',
-              fontWeight: 'bold',
-              marginBottom: '1.5rem',
-              background: 'linear-gradient(90deg, #a855f7, #ec4899)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent'
-            }}>Technical Skills</h2>
-            <div style={{
-              width: '6rem',
-              height: '3px',
-              background: 'linear-gradient(90deg, #a855f7, #ec4899)',
-              margin: '0 auto',
-              borderRadius: '2px'
-            }}></div>
-          </motion.div>
-
+      {/* Skills */}
+      <section id="skills" style={{ padding: '6rem 2rem', background: 'rgba(15, 25, 48, 0.2)' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+          <SectionHeader title="Technical Skills" />
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-            gap: 'clamp(1.5rem, 4vw, 2.5rem)'
+            gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)',
+            gap: '1.75rem'
           }}>
-            {skills.map((skill, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                whileHover={{ y: -5 }}
-                style={{
-                  background: 'rgba(30, 41, 59, 0.6)',
-                  backdropFilter: 'blur(20px)',
-                  borderRadius: '1.5rem',
-                  padding: 'clamp(1.5rem, 4vw, 2rem)',
-                  border: '1px solid rgba(139, 92, 246, 0.3)',
-                  boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)'
-                }}
-              >
-                <div style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  marginBottom: '1rem'
-                }}>
+            {skills.map((skill, i) => (
+              <Card key={i}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
                   <div>
-                    <h3 style={{
-                      fontWeight: '600',
-                      fontSize: 'clamp(1rem, 2.5vw, 1.25rem)',
-                      color: 'white',
-                      marginBottom: '0.25rem'
-                    }}>{skill.name}</h3>
+                    <h3 style={{ fontWeight: '600', marginBottom: '0.25rem' }}>{skill.name}</h3>
                     <span style={{
-                      fontSize: 'clamp(0.7rem, 2vw, 0.85rem)',
+                      fontSize: '0.8rem',
                       color: '#a855f7',
-                      fontWeight: '500',
                       background: 'rgba(139, 92, 246, 0.2)',
                       padding: '0.25rem 0.75rem',
-                      borderRadius: '9999px',
-                      border: '1px solid rgba(139, 92, 246, 0.3)'
-                    }}>
-                      {skill.category}
-                    </span>
+                      borderRadius: '9999px'
+                    }}>{skill.category}</span>
                   </div>
-                  <span style={{
-                    color: '#a855f7',
-                    fontWeight: 'bold',
-                    fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)'
-                  }}>{skill.level}%</span>
+                  <span style={{ color: '#a855f7', fontWeight: '700' }}>{skill.level}%</span>
                 </div>
-
                 <div style={{
                   width: '100%',
+                  height: '8px',
                   background: 'rgba(15, 23, 42, 0.5)',
                   borderRadius: '9999px',
-                  height: '12px',
-                  border: '1px solid rgba(139, 92, 246, 0.2)'
+                  overflow: 'hidden'
                 }}>
                   <motion.div
-                    style={{
-                      background: 'linear-gradient(90deg, #7c3aed, #db2777)',
-                      height: '100%',
-                      borderRadius: '9999px',
-                      transition: 'width 1.5s ease-out'
-                    }}
                     initial={{ width: 0 }}
                     whileInView={{ width: `${skill.level}%` }}
                     viewport={{ once: true }}
-                  ></motion.div>
+                    transition={{ duration: 1, delay: 0.2 }}
+                    style={{
+                      height: '100%',
+                      background: 'linear-gradient(90deg, #7c3aed, #db2777)',
+                      borderRadius: '9999px'
+                    }}
+                  />
                 </div>
-              </motion.div>
+              </Card>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section id="contact" style={{
-        padding: 'clamp(3rem, 10vh, 6rem) clamp(1rem, 4vw, 2rem)',
-        background: 'rgba(15, 23, 42, 0.3)',
-        position: 'relative',
-        overflow: 'hidden'
-      }}>
-        <div style={{
-          maxWidth: '1400px',
-          margin: '0 auto',
-          position: 'relative',
-          zIndex: 1
-        }}>
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            style={{ textAlign: 'center', marginBottom: 'clamp(2rem, 6vw, 4rem)' }}
-          >
-            <h2 style={{
-              fontSize: 'clamp(1.5rem, 5vw, 3rem)',
-              fontWeight: 'bold',
-              marginBottom: '1.5rem',
-              background: 'linear-gradient(90deg, #a855f7, #ec4899)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent'
-            }}>Get In Touch</h2>
-            <div style={{
-              width: '6rem',
-              height: '3px',
-              background: 'linear-gradient(90deg, #a855f7, #ec4899)',
-              margin: '0 auto',
-              borderRadius: '2px'
-            }}></div>
-          </motion.div>
-
+      {/* Contact */}
+      <section id="contact" style={{ padding: '6rem 2rem', background: 'rgba(15, 23, 42, 0.2)' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+          <SectionHeader title="Get In Touch" />
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: 'clamp(1.5rem, 4vw, 4rem)'
-          }} className="contact-grid">
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-              style={{ display: 'grid', gap: 'clamp(1.5rem, 4vw, 2.5rem)' }}
-            >
+            gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+            gap: '3rem'
+          }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
               {[
-                {
-                  icon: Mail,
-                  title: 'Email',
-                  value: 'tanjimjoy@gmail.com',
-                  link: 'mailto:tanjimjoy@gmail.com'
-                },
-                {
-                  icon: Phone,
-                  title: 'Phone',
-                  value: '+880 1838 120302',
-                  link: 'tel:+8801838120302'
-                },
-                {
-                  icon: MapPin,
-                  title: 'Location',
-                  value: 'Gazipur, Bangladesh',
-                  link: '#'
-                }
-              ].map((item, index) => (
-                <motion.a
-                  key={index}
-                  href={item.link}
-                  whileHover={{ x: 10 }}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    gap: '1.5rem',
-                    textDecoration: 'none'
-                  }}
-                >
+                { icon: Mail, title: 'Email', value: 'tanjimjoy@gmail.com', link: 'mailto:tanjimjoy@gmail.com' },
+                { icon: Phone, title: 'Phone', value: '+880 1838 120302', link: 'tel:+8801838120302' },
+                { icon: MapPin, title: 'Location', value: 'Gazipur, Bangladesh' }
+              ].map((item, i) => (
+                <a key={i} href={item.link} style={{ display: 'flex', gap: '1.25rem', textDecoration: 'none', color: 'inherit' }}>
                   <div style={{
                     background: 'rgba(124, 58, 237, 0.2)',
-                    padding: '1rem',
-                    borderRadius: '1rem',
+                    width: '56px',
+                    height: '56px',
+                    borderRadius: '12px',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0,
-                    border: '1px solid rgba(139, 92, 246, 0.3)'
+                    justifyContent: 'center'
                   }}>
-                    <item.icon style={{
-                      color: '#a855f7',
-                      width: 'clamp(1.2rem, 3vw, 1.75rem)',
-                      height: 'clamp(1.2rem, 3vw, 1.75rem)'
-                    }} />
+                    <item.icon size={24} color="#a855f7" />
                   </div>
                   <div>
-                    <h3 style={{
-                      fontSize: 'clamp(1rem, 2.5vw, 1.25rem)',
-                      fontWeight: '600',
-                      marginBottom: '0.25rem',
-                      color: 'white'
-                    }}>{item.title}</h3>
-                    <p style={{
-                      color: '#cbd5e1',
-                      fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)'
-                    }}>{item.value}</p>
+                    <h3 style={{ fontWeight: '600', marginBottom: '0.25rem' }}>{item.title}</h3>
+                    <p style={{ color: '#cbd5e1' }}>{item.value}</p>
                   </div>
-                </motion.a>
+                </a>
               ))}
 
-              <div style={{ paddingTop: '2rem' }}>
-                <h3 style={{
-                  fontSize: 'clamp(0.9rem, 2.5vw, 1rem)',
-                  fontWeight: '600',
-                  marginBottom: '1.5rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.75rem'
-                }}>
-                  <MessageSquare style={{ color: '#a855f7', width: 'clamp(1.2rem, 3vw, 1.5rem)', height: 'clamp(1.2rem, 3vw, 1.5rem)' }} />
-                  Connect With Me
+              <div>
+                <h3 style={{ fontWeight: '600', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <MessageSquare size={20} color="#a855f7" /> Connect With Me
                 </h3>
-                <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', gap: '1rem' }}>
                   {[
-                    { icon: Github, color: '#7c3aed', hoverColor: '#9333ea', link: 'https://github.com/Tanjim-joy' },
-                    { icon: Linkedin, color: '#3b82f6', hoverColor: '#60a5fa', link: 'https://www.linkedin.com/in/tangimul/' },
-                    { icon: MessageCircle, color: '#25D366', hoverColor: '#2563eb', link: 'https://wa.me/8801838120302' },
-                    
-
-                  ].map((social, i) => (
-                    <motion.a
-                      key={i}
-                      href={social.link}
-                      target="_blank"
-                      whileHover={{ scale: 1.1, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                      style={{
-                        background: `rgba(${parseInt(social.color.slice(1,3), 16)}, ${parseInt(social.color.slice(3,5), 16)}, ${parseInt(social.color.slice(5,7), 16)}, 0.2)`,
-                        padding: '1rem',
-                        borderRadius: '1rem',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        border: `1px solid ${social.color}40`
-                      }}
-                    >
-                      <social.icon style={{
-                        color: social.color,
-                        width: 'clamp(1.2rem, 3vw, 1.75rem)',
-                        height: 'clamp(1.2rem, 3vw, 1.75rem)'
-                      }} />
-                    </motion.a>
+                    { icon: Github, color: '#7c3aed', url: 'https://github.com/Tanjim-joy' },
+                    { icon: Linkedin, color: '#3b82f6', url: 'https://www.linkedin.com/in/tangimul/' },
+                    { icon: MessageSquare, color: '#25D366', url: 'https://wa.me/8801838120302' }
+                  ].map((s, i) => (
+                    <a key={i} href={s.url} target="_blank" rel="noopener noreferrer" style={{
+                      background: `rgba(${parseInt(s.color.slice(1, 3), 16)}, ${parseInt(s.color.slice(3, 5), 16)}, ${parseInt(s.color.slice(5, 7), 16)}, 0.2)`,
+                      width: '50px',
+                      height: '50px',
+                      borderRadius: '12px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      border: `1px solid ${s.color}40`
+                    }}>
+                      <s.icon size={22} color={s.color} />
+                    </a>
                   ))}
                 </div>
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-              style={{
-                background: 'rgba(30, 41, 59, 0.6)',
-                backdropFilter: 'blur(20px)',
-                borderRadius: '1.5rem',
-                padding: 'clamp(1.5rem, 4vw, 3rem)',
-                border: '1px solid rgba(139, 92, 246, 0.3)',
-                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)'
-              }}
-            >
-              <form  style={{ display: 'grid', gap: '1.5rem' }} onSubmit={handleEmailSubmit}>
+            <Card>
+              <form ref={formRef} onSubmit={handleEmailSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                 <div>
-                  <label style={{
-                    display: 'block',
-                    color: '#cbd5e1',
-                    marginBottom: '0.75rem',
-                    fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
-                    fontWeight: '500'
-                  }}>Name</label>
+                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Name</label>
                   <input
                     type="text"
+                    name="name"
+                    required
                     style={{
                       width: '100%',
-                      background: 'rgba(15, 23, 42, 0.5)',
+                      padding: '0.875rem 1.25rem',
+                      background: 'rgba(15, 23, 42, 0.6)',
                       border: '1px solid rgba(139, 92, 246, 0.4)',
-                      borderRadius: '1rem',
-                      padding: 'clamp(0.75rem, 2vw, 1rem) clamp(1rem, 3vw, 1.5rem)',
-                      color: 'white',
-                      fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
-                      outline: 'none'
-                    }}
-                    name='name'
-                    placeholder="Enter Your Name"
-                    onFocus={(e) => {
-                      e.target.style.borderColor = '#a855f7';
-                      e.target.style.boxShadow = '0 0 0 3px rgba(168, 85, 247, 0.2)';
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = 'rgba(139, 92, 246, 0.4)';
-                      e.target.style.boxShadow = 'none';
+                      borderRadius: '12px',
+                      color: 'white'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{
-                    display: 'block',
-                    color: '#cbd5e1',
-                    marginBottom: '0.75rem',
-                    fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
-                    fontWeight: '500'
-                  }}>Email</label>
+                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Email</label>
                   <input
                     type="email"
-                    name='email'
+                    name="email"
+                    required
                     style={{
                       width: '100%',
-                      background: 'rgba(15, 23, 42, 0.5)',
+                      padding: '0.875rem 1.25rem',
+                      background: 'rgba(15, 23, 42, 0.6)',
                       border: '1px solid rgba(139, 92, 246, 0.4)',
-                      borderRadius: '1rem',
-                      padding: 'clamp(0.75rem, 2vw, 1rem) clamp(1rem, 3vw, 1.5rem)',
-                      color: 'white',
-                      fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
-                      outline: 'none'
-                    }}
-                    placeholder="Enter your.email@example.com"
-                    onFocus={(e) => {
-                      e.target.style.borderColor = '#a855f7';
-                      e.target.style.boxShadow = '0 0 0 3px rgba(168, 85, 247, 0.2)';
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = 'rgba(139, 92, 246, 0.4)';
-                      e.target.style.boxShadow = 'none';
+                      borderRadius: '12px',
+                      color: 'white'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{
-                    display: 'block',
-                    color: '#cbd5e1',
-                    marginBottom: '0.75rem',
-                    fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
-                    fontWeight: '500'
-                  }}>Message</label>
+                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Message</label>
                   <textarea
+                    name="message"
+                    required
                     rows="4"
-                    name='message'
                     style={{
                       width: '100%',
-                      background: 'rgba(15, 23, 42, 0.5)',
+                      padding: '0.875rem 1.25rem',
+                      background: 'rgba(15, 23, 42, 0.6)',
                       border: '1px solid rgba(139, 92, 246, 0.4)',
-                      borderRadius: '1rem',
-                      padding: 'clamp(0.75rem, 2vw, 1rem) clamp(1rem, 3vw, 1.5rem)',
+                      borderRadius: '12px',
                       color: 'white',
-                      fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
-                      outline: 'none',
-                      resize: 'vertical',
-                      minHeight: '120px'
-                    }}
-                    placeholder="Your message here..."
-                    onFocus={(e) => {
-                      e.target.style.borderColor = '#a855f7';
-                      e.target.style.boxShadow = '0 0 0 3px rgba(168, 85, 247, 0.2)';
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = 'rgba(139, 92, 246, 0.4)';
-                      e.target.style.boxShadow = 'none';
+                      resize: 'vertical'
                     }}
                   ></textarea>
                 </div>
                 <motion.button
-                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   type="submit"
                   style={{
-                    width: '100%',
+                    padding: '0.875rem',
                     background: 'linear-gradient(90deg, #7c3aed, #db2777)',
-                    padding: 'clamp(0.75rem, 2vw, 1rem)',
-                    borderRadius: '1rem',
+                    borderRadius: '12px',
                     fontWeight: '600',
                     border: 'none',
                     color: 'white',
                     cursor: 'pointer',
-                    fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
-                    boxShadow: '0 10px 25px rgba(124, 58, 237, 0.3)'
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.5rem'
                   }}
                 >
-                  Send Message
-                  <ArrowRight style={{
-                    marginLeft: '0.75rem',
-                    verticalAlign: 'middle',
-                    width: 'clamp(1rem, 3vw, 1.25rem)',
-                    height: 'clamp(1rem, 3vw, 1.25rem)'
-                  }} />
+                  Send Message <ArrowRight size={18} />
                 </motion.button>
               </form>
-            </motion.div>
+            </Card>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer style={{
-        padding: 'clamp(2rem, 8vh, 3.5rem) clamp(1rem, 4vw, 2rem)',
-        borderTop: '1px solid rgba(139, 92, 246, 0.3)',
-        position: 'relative',
-        overflow: 'hidden'
-      }}>
-        <div style={{
-          maxWidth: '1400px',
-          margin: '0 auto',
-          textAlign: 'center',
-          position: 'relative',
-          zIndex: 1
-        }}>
-          <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: '1rem',
-            marginBottom: '1.5rem'
-          }}>
-            <Code style={{
-              color: '#a855f7',
-              width: 'clamp(1.2rem, 3vw, 1.5rem)',
-              height: 'clamp(1.2rem, 3vw, 1.5rem)'
-            }} />
-            <span style={{
-              fontSize: 'clamp(1rem, 2.5vw, 1.25rem)',
-              fontWeight: 'bold',
-              background: 'linear-gradient(90deg, #a855f7, #ec4899)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent'
-            }}>
-              Tanjim
-            </span>
-          </div>
-          <p style={{
-            color: '#94a3b8',
-            fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
-            maxWidth: '90%',
-            margin: '0 auto',
-            lineHeight: '1.6'
-          }}>
-            © 2026 Tanjim. All rights reserved. Crafted with precision and passion for digital innovation.
-          </p>
+      <footer style={{ padding: '3rem 2rem', borderTop: '1px solid rgba(139, 92, 246, 0.3)', textAlign: 'center' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
+          <Code size={20} color="#a855f7" />
+          <span style={{
+            fontWeight: '700',
+            background: 'linear-gradient(90deg, #a855f7, #ec4899)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent'
+          }}>Tanjim</span>
         </div>
+        <p style={{ color: '#94a3b8' }}>
+          © 2026 Tanjim. All rights reserved. Crafted with precision and passion.
+        </p>
       </footer>
 
-      <style>
-        {`
-          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-          
-          @keyframes pulse {
-            0% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 0.6; transform: scale(1.1); }
-            100% { opacity: 0.3; transform: scale(1); }
-          }
-          
-          * {
-            scrollbar-width: thin;
-            scrollbar-color: #7c3aed #1e293b;
-            box-sizing: border-box;
-          }
-          
-          *::-webkit-scrollbar {
-            width: 6px;
-          }
-          
-          *::-webkit-scrollbar-track {
-            background: #1e293b;
-          }
-          
-          *::-webkit-scrollbar-thumb {
-            background-color: #7c3aed;
-            border-radius: 20px;
-            border: 2px solid #1e293b;
-          }
-
-          .desktop-nav {
-            display: flex;
-          }
-
-          .mobile-nav {
-            display: none;
-          }
-
-          @media (max-width: 768px) {
-            .desktop-nav {
-              display: none;
-            }
-
-            .mobile-nav {
-              display: block;
-            }
-
-            .hero-grid {
-              grid-template-columns: 1fr;
-              text-align: center;
-            }
-
-            .hero-grid > div:first-child {
-              order: 2;
-            }
-
-            .hero-grid > div:last-child {
-              order: 1;
-            }
-
-            .experience-header, .education-header {
-              flex-direction: column;
-              align-items: flex-start;
-            }
-
-            .contact-grid {
-              grid-template-columns: 1fr;
-            }
-          }
-
-          @media (max-width: 480px) {
-            input, textarea {
-              width: 100% !important;
-            }
-
-            .hero-grid > div:last-child {
-              max-width: 80%;
-              margin: 0 auto;
-            }
-          }
-        `}
-      </style>
+      {/* Global Styles */}
+      <style jsx>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        @keyframes pulse {
+          0%, 100% { opacity: 0.3; transform: scale(1); }
+          50% { opacity: 0.6; transform: scale(1.05); }
+        }
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: 'Inter', sans-serif; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: #7c3aed; border-radius: 20px; }
+      `}</style>
     </div>
   );
 };
