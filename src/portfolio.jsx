@@ -107,6 +107,39 @@ const Portfolio = () => {
     { name: 'Requirements Engineering', level: 98, category: 'Process' },
   ];
 
+  const projects = [
+    {
+      title: 'Coaching Center Management System',
+      description: 'A comprehensive web application for managing coaching center operations including student enrollment, course management, attendance tracking, fee collection, and performance analytics.',
+      technologies: ['ASP.NET Core 8', 'C#', 'Bootstrap', 'MySQL', 'Entity Framework Core'],
+      features: [
+        'Student enrollment and profile management',
+        'Course and batch scheduling',
+        'Attendance tracking system',
+        'Fee collection and invoice generation',
+        'Teache & student performance reports and analytics',
+        'Role-based access control'
+      ],
+      liveLink: 'https://tanjims.bsite.net/Identity/Account/Login?ReturnUrl=%2FCoachingOwner%2FDashboard',
+      type: 'enterprise'
+    },
+    {
+      title: 'Inventory Management System',
+      description: 'A robust inventory management solution designed for tracking stock levels, managing suppliers, processing orders, and generating comprehensive reports for business intelligence.',
+      technologies: ['ASP.NET Core 8', 'C#', 'Bootstrap', 'MySQL', 'RESTful API'],
+      features: [
+        'Real-time inventory tracking',
+        'Supplier and vendor management',
+        'Purchase order processing',
+        'Stock alerts and notifications',
+        'Sales and purchase reports',
+        'Multi-location warehouse support'
+      ],
+      liveLink: 'https://inventorysys.bsite.net/Identity/Account/Login',
+      type: 'business'
+    }
+  ];
+
   const experiences = [
     {
       title: 'Deputy Assistant Director',
