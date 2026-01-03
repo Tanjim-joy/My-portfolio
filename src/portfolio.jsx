@@ -102,7 +102,7 @@ const Portfolio = () => {
     { name: 'MySQL', level: 90, category: 'Database' },
     { name: 'SQL', level: 90, category: 'Database' },
     { name: 'Git', level: 88, category: 'DevOps' },
-    { name: 'Docker', level: 50, category: 'DevOps' },
+    { name: 'Docker', level: 80, category: 'DevOps' },
     { name: 'System Design & Architecture', level: 78, category: 'Architecture' },
     { name: 'Requirements Engineering', level: 98, category: 'Process' },
   ];
