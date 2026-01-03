@@ -56,7 +56,7 @@ const Portfolio = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = = ['about', 'experience', 'projects', 'education', 'skills', 'contact'];
+      const sections = ['about', 'experience', 'education', 'skills', 'contact'];
       const scrollPosition = window.scrollY + 100;
       for (const section of sections) {
         const element = document.getElementById(section);
@@ -105,39 +105,6 @@ const Portfolio = () => {
     { name: 'System Design & Architecture', level: 78, category: 'Architecture' },
     { name: 'Requirements Engineering', level: 98, category: 'Process' },
   ];
-
-  const projects = [
-  {
-    title: 'Coaching Center Management System',
-    description: 'A comprehensive web application for managing coaching center operations including student enrollment, course management, attendance tracking, fee collection, and performance analytics.',
-    technologies: ['ASP.NET Core 8', 'C#', 'Bootstrap', 'MySQL', 'Entity Framework Core'],
-    features: [
-      'Student enrollment and profile management',
-      'Course and batch scheduling',
-      'Attendance tracking system',
-      'Fee collection and invoice generation',
-      'Teacher & student performance reports and analytics',
-      'Role-based access control'
-    ],
-    liveLink: 'https://tanjims.bsite.net/Identity/Account/Login?ReturnUrl=%2FCoachingOwner%2FDashboard',
-    type: 'enterprise'
-  },
-  {
-    title: 'Inventory Management System',
-    description: 'A robust inventory management solution designed for tracking stock levels, managing suppliers, processing orders, and generating comprehensive reports for business intelligence.',
-    technologies: ['ASP.NET Core 8', 'C#', 'Bootstrap', 'MySQL', 'RESTful API'],
-    features: [
-      'Real-time inventory tracking',
-      'Supplier and vendor management',
-      'Purchase order processing',
-      'Stock alerts and notifications',
-      'Sales and purchase reports',
-      'Multi-location warehouse support'
-    ],
-    liveLink: 'https://inventorysys.bsite.net/Identity/Account/Login',
-    type: 'business'
-  }
-];
 
   const experiences = [
     {
@@ -277,7 +244,7 @@ const Portfolio = () => {
             display: isMobile ? 'none' : 'flex',
             gap: 'clamp(1rem, 3vw, 2.5rem)'
           }}>
-            {['about', 'experience', 'projects', 'education', 'skills', 'contact'].map((item) => (
+            {['about', 'experience', 'education', 'skills', 'contact'].map((item) => (
               <motion.button
                 key={item}
                 onClick={() => scrollToSection(item)}
@@ -356,7 +323,7 @@ const Portfolio = () => {
               borderTop: '1px solid rgba(139, 92, 246, 0.3)'
             }}
           >
-            {['about', 'experience', 'projects', 'education', 'skills', 'contact'].map((item) => (
+            {['about', 'experience', 'education', 'skills', 'contact'].map((item) => (
               <motion.button
                 key={item}
                 onClick={() => {
@@ -1231,184 +1198,6 @@ const Portfolio = () => {
           </div>
         </div>
       </section>
-
-      {/* Projects Section */}
-<section id="projects" style={{
-  padding: 'clamp(3rem, 10vh, 6rem) clamp(1rem, 4vw, 2rem)',
-  background: 'rgba(15, 23, 42, 0.3)',
-  position: 'relative',
-  overflow: 'hidden'
-}}>
-  <div style={{
-    maxWidth: '1400px',
-    margin: '0 auto',
-    position: 'relative',
-    zIndex: 1
-  }}>
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8 }}
-      viewport={{ once: true }}
-      style={{ textAlign: 'center', marginBottom: 'clamp(2rem, 6vw, 4rem)' }}
-    >
-      <h2 style={{
-        fontSize: 'clamp(1.5rem, 5vw, 3rem)',
-        fontWeight: 'bold',
-        marginBottom: '1.5rem',
-        background: 'linear-gradient(90deg, #a855f7, #ec4899)',
-        WebkitBackgroundClip: 'text',
-        WebkitTextFillColor: 'transparent'
-      }}>Featured Projects</h2>
-      <div style={{
-        width: '6rem',
-        height: '3px',
-        background: 'linear-gradient(90deg, #a855f7, #ec4899)',
-        margin: '0 auto',
-        borderRadius: '2px'
-      }}></div>
-    </motion.div>
-
-    <div style={{ display: 'grid', gap: 'clamp(2rem, 5vw, 3rem)' }}>
-      {projects.map((project, index) => (
-        <motion.div
-          key={index}
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: index * 0.2 }}
-          viewport={{ once: true }}
-          style={{
-            background: 'rgba(30, 41, 59, 0.6)',
-            backdropFilter: 'blur(20px)',
-            borderRadius: '1.5rem',
-            padding: 'clamp(1.5rem, 4vw, 2.5rem)',
-            border: '1px solid rgba(139, 92, 246, 0.3)',
-            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)',
-            position: 'relative',
-            overflow: 'hidden'
-          }}
-        >
-          <div style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '5px',
-            height: '100%',
-            background: project.type === 'enterprise' ?
-              'linear-gradient(to bottom, #a855f7, #ec4899)' :
-              'linear-gradient(to bottom, #3b82f6, #1d4ed8)',
-            borderRadius: '1.5rem 0 0 1.5rem'
-          }}></div>
-
-          <div style={{ marginBottom: '2rem' }}>
-            <h3 style={{
-              fontSize: 'clamp(1.25rem, 3vw, 1.75rem)',
-              fontWeight: 'bold',
-              color: '#a855f7',
-              marginBottom: '1rem'
-            }}>{project.title}</h3>
-            <p style={{
-              color: '#cbd5e1',
-              lineHeight: '1.8',
-              fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
-              marginBottom: '1.5rem'
-            }}>{project.description}</p>
-
-            <div style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: '0.75rem',
-              marginBottom: '2rem'
-            }}>
-              {project.technologies.map((tech, i) => (
-                <span key={i} style={{
-                  background: 'rgba(124, 58, 237, 0.2)',
-                  padding: '0.5rem 1rem',
-                  borderRadius: '9999px',
-                  color: '#c084fc',
-                  fontWeight: '500',
-                  border: '1px solid rgba(139, 92, 246, 0.3)',
-                  fontSize: 'clamp(0.8rem, 2vw, 0.95rem)'
-                }}>
-                  {tech}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          <div style={{ marginBottom: '2rem' }}>
-            <h4 style={{
-              fontWeight: '600',
-              fontSize: 'clamp(1rem, 2.5vw, 1.25rem)',
-              marginBottom: '1rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.75rem'
-            }}>
-              <CheckCircle style={{
-                color: '#10b981',
-                width: 'clamp(1.2rem, 3vw, 1.5rem)',
-                height: 'clamp(1.2rem, 3vw, 1.5rem)'
-              }} />
-              Key Features
-            </h4>
-            <ul style={{ display: 'grid', gap: '0.75rem' }}>
-              {project.features.map((feature, i) => (
-                <li key={i} style={{
-                  display: 'flex',
-                  alignItems: 'flex-start',
-                  gap: '0.75rem',
-                  padding: '0.75rem',
-                  background: 'rgba(15, 23, 42, 0.5)',
-                  borderRadius: '0.75rem',
-                  border: '1px solid rgba(139, 92, 246, 0.2)'
-                }}>
-                  <div style={{
-                    background: 'linear-gradient(90deg, #a855f7, #ec4899)',
-                    width: '6px',
-                    height: '6px',
-                    borderRadius: '50%',
-                    marginTop: '0.6rem',
-                    flexShrink: 0
-                  }}></div>
-                  <span style={{
-                    color: '#cbd5e1',
-                    lineHeight: '1.6',
-                    fontSize: 'clamp(0.85rem, 2.5vw, 1rem)'
-                  }}>{feature}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <motion.a
-            href={project.liveLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            whileHover={{ scale: 1.02, y: -2 }}
-            whileTap={{ scale: 0.98 }}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.75rem',
-              padding: 'clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 3vw, 2rem)',
-              background: 'linear-gradient(90deg, #7c3aed, #db2777)',
-              borderRadius: '0.75rem',
-              fontWeight: '600',
-              color: 'white',
-              textDecoration: 'none',
-              fontSize: 'clamp(0.9rem, 2.5vw, 1rem)',
-              boxShadow: '0 10px 25px rgba(124, 58, 237, 0.3)'
-            }}
-          >
-            View Live Project
-            <ArrowRight style={{ width: 'clamp(1rem, 3vw, 1.25rem)', height: 'clamp(1rem, 3vw, 1.25rem)' }} />
-          </motion.a>
-        </motion.div>
-      ))}
-    </div>
-  </div>
-</section>
 
       {/* Contact Section */}
       <section id="contact" style={{
