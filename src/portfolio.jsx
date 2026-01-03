@@ -32,6 +32,7 @@ const presentDate = new Date();
 const diffInMs = presentDate - startdate;
 const diffInDays = diffInMs / (1000 * 60 * 60 * 24 * 365.25);
 const years = diffInDays.toFixed(1);
+ const crntyer = new Date().getFullYear();
 
 const Portfolio = () => {
   const [activeSection, setActiveSection] = useState('about');
@@ -147,7 +148,7 @@ const Portfolio = () => {
     { name: 'MySQL', level: 90, category: 'Database' },
     { name: 'SQL', level: 90, category: 'Database' },
     { name: 'Git', level: 88, category: 'DevOps' },
-    { name: 'Docker', level: 25, category: 'DevOps' },
+    { name: 'Docker', level: 88, category: 'DevOps' },
     {
       name: 'System Design & Architecture',
       level: 82,
@@ -2238,7 +2239,7 @@ const Portfolio = () => {
               lineHeight: '1.6',
             }}
           >
-            © 2024 Tanjim. All rights reserved. Crafted with precision
+            © {crntyer} Tanjim. All rights reserved. Crafted with precision
             and passion for digital innovation.
           </p>
         </div>
