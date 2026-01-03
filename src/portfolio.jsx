@@ -173,12 +173,6 @@ const Portfolio = () => {
         'Performance analytics',
         'Role-based access',
       ],
-      // user_Activity: [
-      //   'Administrators: Full access to manage all aspects of the system.',
-      //   'Owners: Access to  manage courses,batches,payments, high-level reports and system settings.',
-      //   'Teachers: Access to track attendance, and view student performance.',
-      //   'Students: Access to view their courses, attendance records, and performance reports.',
-      // ],
 
       liveLink: 'https://tanjims.bsite.net/Identity/Account/Login',
       type: 'enterprise',
@@ -1762,30 +1756,6 @@ const Portfolio = () => {
                     ))}
                   </ul>
                 </div>
-
-                {/* <div style={{ marginBottom: '1.5rem' }}>
-                  <h4
-                    style={{
-                      color: '#c084fc',
-                      fontSize: '1rem',
-                      marginBottom: '0.5rem',
-                    }}
-                  >
-                    User Role:
-                  </h4>
-                  <ul
-                    style={{
-                      paddingLeft: '1.5rem',
-                      color: '#cbd5e1',
-                    }}
-                  >
-                    {project.user_Activity.map((usr, i) => (
-                      <li key={i} style={{ marginBottom: '0.25rem' }}>
-                        {usr}
-                      </li>
-                    ))}
-                  </ul>
-                </div> */}
 
                 <a
                   href={project.liveLink}
