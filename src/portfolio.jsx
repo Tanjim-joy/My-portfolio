@@ -144,7 +144,7 @@ const Portfolio = () => {
     { name: 'Express', level: 70, category: 'Backend' },
     { name: 'C#', level: 90, category: 'Backend' },
     { name: 'ASP.NET Core', level: 85, category: 'Backend' },
-    { name: 'GO Lang', level: 60, category: 'Backend'},
+    { name: 'Golang', level: 60, category: 'Backend'},
     { name: 'API Development', level: 85, category: 'Backend' },
     { name: 'MySQL', level: 90, category: 'Database' },
     { name: 'SQL', level: 90, category: 'Database' },
