@@ -256,7 +256,7 @@ const Portfolio = () => {
       degree: 'Web Application Development Using ASP.NET',
       institution: 'IsDB-BISEW IT Scholarship Program',
       period: '2021',
-      grade: 'Completed',
+      // grade: 'Completed',
       type: 'Certification',
     },
   ];
@@ -1483,7 +1483,7 @@ const Portfolio = () => {
                       fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
                     }}
                   >
-                    /* {edu.grade} */
+                    
                   </span>
                 </div>
               </motion.div>
