@@ -234,14 +234,14 @@ const Portfolio = () => {
       degree: 'Bachelor of Science in Computer Science & Engineering',
       institution: 'City University Bangladesh',
       period: '2018 - 2022',
-      grade: 'CGPA: 2.95/4.00',
+      // grade: 'CGPA: 2.95/4.00',
       type: 'undergraduate',
     },
     {
       degree: 'Diploma in Telecommunication Engineering',
       institution: 'Institute of Information Technology Bogura',
       period: '2011 - 2015',
-      grade: 'CGPA: 3.06/4.00',
+      // grade: 'CGPA: 3.06/4.00',
       type: 'Diploma',
     },
     {
@@ -249,7 +249,7 @@ const Portfolio = () => {
       institution:
         'Technical Secondary School & College Chapainawabganj',
       period: '2010',
-      grade: 'GPA: 3.82/5.00',
+      // grade: 'GPA: 3.82/5.00',
       type: 'SSC',
     },
     {
@@ -1483,7 +1483,7 @@ const Portfolio = () => {
                       fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
                     }}
                   >
-                    {edu.grade}
+                    /* {edu.grade} */
                   </span>
                 </div>
               </motion.div>
