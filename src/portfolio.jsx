@@ -1469,7 +1469,20 @@ const Portfolio = () => {
                     border: '1px solid rgba(139, 92, 246, 0.2)',
                   }}
                 >
-                  
+                  <Trophy
+                    style={{
+                      color: '#10b981',
+                      width: 'clamp(1.2rem, 3vw, 1.5rem)',
+                      height: 'clamp(1.2rem, 3vw, 1.5rem)',
+                    }}
+                  />
+                  <span
+                    style={{
+                      color: '#10b981',
+                      fontWeight: '600',
+                      fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
+                    }}
+                  >
                     
                   </span>
                 </div>
