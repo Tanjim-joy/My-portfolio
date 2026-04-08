@@ -303,6 +303,12 @@ const Portfolio = () => {
   ? skills
   : skills.filter(s => s.category === activeSkillCategory);
 
+  // console.log('Skills Filter Debug:', {
+  //   activeSkillCategory,
+  //   skillsCount: skills.length,
+  //   filteredCount: filteredSkills.length
+  // });
+
 
 
   // Animation Variants
@@ -1703,14 +1709,14 @@ const Portfolio = () => {
           <div style={{ maxWidth: '1400px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
             <motion.div
               initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true, margin: '-100px' }}
               style={{ textAlign: 'center', marginBottom: 'clamp(3rem, 8vw, 5rem)' }}
             >
               <motion.span
                 initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
+                animate={{ opacity: 1 }}
                 viewport={{ once: true }}
                 style={{
                   display: 'inline-block',
@@ -1750,7 +1756,8 @@ const Portfolio = () => {
             {/* Category Filter */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 }}
               viewport={{ once: true }}
               style={{
                 display: 'flex',
@@ -1765,25 +1772,21 @@ const Portfolio = () => {
                   key={cat}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => setActiveSkillCategory(cat === filteredSkills ? 'All Skills' : cat)}
+                  onClick={() => setActiveSkillCategory(cat)}
                   style={{
                     padding: '0.5rem 1.25rem',
-                    background: 'transparent',
-                    border: `2px solid ${isDarkMode ? 'rgba(139, 92, 246, 0.4)' : 'rgba(124, 58, 237, 0.3)'}`,
+                    background: activeSkillCategory === cat
+                      ? 'linear-gradient(90deg, #f59e0b, #fbbf24)'
+                      : 'transparent',
+                    border: `2px solid ${activeSkillCategory === cat
+                      ? '#f59e0b'
+                      : (isDarkMode ? 'rgba(139, 92, 246, 0.4)' : 'rgba(124, 58, 237, 0.3)')}`,
                     borderRadius: '9999px',
-                    color: isDarkMode ? '#cbd5e1' : '#475569',
+                    color: activeSkillCategory === cat ? 'white' : (isDarkMode ? '#cbd5e1' : '#475569'),
                     fontSize: 'clamp(0.8rem, 2vw, 0.95rem)',
-                    fontWeight: 500,
+                    fontWeight: activeSkillCategory === cat ? 600 : 500,
                     cursor: 'pointer',
                     transition: 'all 0.2s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = '#a855f7';
-                    e.currentTarget.style.color = '#a855f7';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = isDarkMode ? 'rgba(139, 92, 246, 0.4)' : 'rgba(124, 58, 237, 0.3)';
-                    e.currentTarget.style.color = isDarkMode ? '#cbd5e1' : '#475569';
                   }}
                 >
                   {cat}
@@ -1794,8 +1797,8 @@ const Portfolio = () => {
             <motion.div
               variants={containerVariants}
               initial="hidden"
-              whileInView="show"
-              viewport={{ once: true, margin: '-100px' }}
+              animate="show" // Fixed typo and changed from whileInView to animate
+              transition={{ delay: 0.8 }}
               style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
@@ -1888,6 +1891,23 @@ const Portfolio = () => {
                   </div>
                 </motion.div>
               ))}
+              
+              {filteredSkills.length === 0 && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  style={{
+                    textAlign: 'center',
+                    padding: '3rem',
+                    color: isDarkMode ? '#cbd5e1' : '#475569',
+                    fontSize: '1.1rem'
+                  }}
+                >
+                  <Code style={{ width: 48, height: 48, margin: '0 auto 1rem', opacity: 0.5 }} />
+                  <p>এই ক্যাটাগরিতে কোনো স্কিল পাওয়া যায়নি।</p>
+                  <p style={{ fontSize: '0.9rem', opacity: 0.7 }}>সব স্কিল দেখতে "All Skills" সিলেক্ট করুন।</p>
+                </motion.div>
+              )}
             </motion.div>
           </div>
         </section>
