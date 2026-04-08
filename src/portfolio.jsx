@@ -29,6 +29,8 @@ const Portfolio = () => {
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [activeProjectFilter, setActiveProjectFilter] = useState('all');
+  const [activeSkillCategory, setActiveSkillCategory] = useState('All Skills');
+  
   
   // Refs
   const cursorRef = useRef(null);
@@ -49,6 +51,7 @@ const Portfolio = () => {
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, [isMobile]);
+  
 
   // Screen Size Detection
   useEffect(() => {
@@ -116,7 +119,7 @@ const Portfolio = () => {
     // Close menu if open (for mobile)
     if (isMenuOpen) {
       setIsMenuOpen(false);
-    }
+    }  
     
     // Small delay to allow menu to close and DOM to settle
     setTimeout(() => {
@@ -167,7 +170,7 @@ const Portfolio = () => {
         }
       );
   };
-
+  
   // Data Arrays
   const skills = [
     { name: 'HTML5', level: 95, category: 'Frontend' },
@@ -276,10 +279,31 @@ const Portfolio = () => {
   const navItems = ['about', 'experience', 'education', 'skills', 'projects', 'contact'];
   const projectFilters = ['all', 'enterprise', 'business'];
 
+  
   // Filter Projects
   const filteredProjects = activeProjectFilter === 'all' 
-    ? projects 
-    : projects.filter(p => p.type === activeProjectFilter);
+  ? projects 
+  : projects.filter(p => p.type === activeProjectFilter);
+
+  // console.log('Project Filters Debug:', {
+  //   activeProjectFilter,
+  //   projectFilters,
+  //   projectsCount: projects.length,
+  //   filteredCount: filteredProjects.length
+  // });
+  
+  // useEffect(() => {
+  //   console.log('Active Project Changed:', activeProjectFilter);    
+  //       console.log('Filtered Projects:', filteredProjects.map(p => p.title));
+
+  // },[activeProjectFilter, filteredProjects]);
+
+  // Filter Skills
+  const filteredSkills = activeSkillCategory === 'All Skills'
+  ? skills
+  : skills.filter(s => s.category === activeSkillCategory);
+
+
 
   // Animation Variants
   const containerVariants = {
@@ -1700,7 +1724,7 @@ const Portfolio = () => {
                   border: `1px solid ${isDarkMode ? 'rgba(245, 158, 11, 0.3)' : 'rgba(245, 158, 11, 0.2)'}`
                 }}
               >
-                ⚡ Technical Skills
+                ⚡ Technical Skills 
               </motion.span>
               <h2 style={{
                 fontSize: 'clamp(1.8rem, 6vw, 3.5rem)',
@@ -1736,11 +1760,12 @@ const Portfolio = () => {
                 flexWrap: 'wrap'
               }}
             >
-              {['Frontend', 'Backend', 'Database', 'DevOps', 'Architecture', 'Process'].map((cat) => (
+              {['All Skills','Frontend', 'Backend', 'Database', 'DevOps', 'Architecture', 'Process'].map((cat) => (
                 <motion.button
                   key={cat}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
+                  onClick={() => setActiveSkillCategory(cat === filteredSkills ? 'All Skills' : cat)}
                   style={{
                     padding: '0.5rem 1.25rem',
                     background: 'transparent',
@@ -1777,7 +1802,7 @@ const Portfolio = () => {
                 gap: 'clamp(1.25rem, 3vw, 2rem)'
               }}
             >
-              {skills.map((skill, index) => (
+              {filteredSkills.map((skill, index) => (
                 <motion.div
                   key={index}
                   variants={itemVariants}
@@ -1923,8 +1948,8 @@ const Portfolio = () => {
             {/* Project Filter */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              animate={{ opacity: 1, y: 0 }} // Changed from whileInView to animate
+              transition={{ delay: 0.5 }}
               style={{
                 display: 'flex',
                 justifyContent: 'center',
@@ -1964,8 +1989,8 @@ const Portfolio = () => {
             <motion.div
               variants={containerVariants}
               initial="hidden"
-              whileInView="show"
-              viewport={{ once: true, margin: '-100px' }}
+              animate="show" // Changed from whileInView to animate
+              transition={{ delay: 0.8 }}
               style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
@@ -1973,7 +1998,7 @@ const Portfolio = () => {
               }}
             >
               <AnimatePresence mode="popLayout">
-                {filteredProjects.map((project, index) => (
+                {filteredProjects.map((project) => (
                   <motion.div
                     key={project.title}
                     layout
@@ -2149,6 +2174,23 @@ const Portfolio = () => {
                   </motion.div>
                 ))}
               </AnimatePresence>
+              
+              {filteredProjects.length === 0 && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  style={{
+                    textAlign: 'center',
+                    padding: '3rem',
+                    color: isDarkMode ? '#cbd5e1' : '#475569',
+                    fontSize: '1.1rem'
+                  }}
+                >
+                  <Code style={{ width: 48, height: 48, margin: '0 auto 1rem', opacity: 0.5 }} />
+                  <p>No projects found for the selected filter.</p>
+                  <p style={{ fontSize: '0.9rem', opacity: 0.7 }}>Try selecting "All Projects" to see all available projects.</p>
+                </motion.div>
+              )}
             </motion.div>
           </div>
         </section>
