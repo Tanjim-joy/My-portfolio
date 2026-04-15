@@ -2712,7 +2712,7 @@ const Portfolio = () => {
             gap: '1.5rem',
             flexWrap: 'wrap'
           }}>
-            {['Privacy', 'Terms', 'Sitemap'].map((link) => (
+            {/* {['Privacy', 'Terms', 'Sitemap'].map((link) => (
               <a
                 key={link}
                 href="#"
@@ -2728,7 +2728,7 @@ const Portfolio = () => {
               >
                 {link}
               </a>
-            ))}
+            ))} */}
           </div>
         </div>
       </footer>
