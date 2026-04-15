@@ -38,7 +38,7 @@ const Portfolio = () => {
 
   // Scroll Progress
   const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
+  const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30});
 
   // Mouse Position for Custom Cursor
   useEffect(() => {
@@ -185,17 +185,32 @@ const Portfolio = () => {
     { name: 'PHP', level: 85, category: 'Backend' },
     { name: 'Node.js', level: 70, category: 'Backend' },
     { name: 'Express', level: 70, category: 'Backend' },
-    { name: 'C#', level: 90, category: 'Backend' },
+    { name: 'C#', level: 95, category: 'Backend' },
     { name: 'WPF', level: 88, category: 'Backend' },
     { name: 'ASP.NET Core', level: 85, category: 'Backend' },
-    { name: 'Golang', level: 60, category: 'Backend'},
+    { name: 'Golang', level: 50, category: 'Backend'},
     { name: 'API Development', level: 85, category: 'Backend' },
     { name: 'MySQL', level: 90, category: 'Database' },
     { name: 'SQL', level: 90, category: 'Database' },
+    { name: 'Database Optimization', level: 75, category: 'Database' },
+    { name: 'Indexing & Query Optimization', level: 85, category: 'Database' },
     { name: 'Git', level: 88, category: 'DevOps' },
     { name: 'Docker', level: 88, category: 'DevOps' },
+    { name: 'CI/CD (GitHub Actions)', level: 70, category: 'DevOps' },
+    { name: 'Container Orchestration (Docker Compose)', level: 85, category: 'DevOps' },
     { name: 'System Design & Architecture', level: 82, category: 'Architecture' },
+    { name: 'Clean Architecture', level: 80, category: 'Architecture' },
+    { name: 'SOLID Principles', level: 90, category: 'Architecture' },
+    { name: 'Design Patterns', level: 85, category: 'Architecture' },
+    { name: 'Scalable System Design', level: 75, category: 'Architecture' },
     { name: 'Requirements Engineering', level: 95, category: 'Process' },
+    { name: 'Agile / Scrum', level: 85, category: 'Process' },
+    { name: 'Code Review', level: 90, category: 'Process' },
+    { name: 'Technical Documentation', level: 90, category: 'Process' },
+    { name: 'Problem Solving', level: 95, category: 'Process' },
+    { name: 'Unit Testing', level: 75, category: 'Testing' },
+    { name: 'Integration Testing', level: 70, category: 'Testing' },    
+    { name: 'Postman', level: 90, category: 'Testing' },
   ];
 
   const projects = [
@@ -244,7 +259,10 @@ const Portfolio = () => {
         'Implemented enterprise-level solutions using PHP, C# & .NET and database technologies',
         'Led API development projects integrating multiple internal systems',
         'Improved system performance by 40% through code optimization and database tuning',
-      ],
+        'Reduced deployment time by 60% through Docker-based environments',
+        'Designed reusable modules reducing future development effort by 30%',
+        'Maintained and enhanced existing applications, ensuring high availability and performance in a production environment',
+      ],        
       type: 'development',
     },
   ];
@@ -308,8 +326,6 @@ const Portfolio = () => {
   //   skillsCount: skills.length,
   //   filteredCount: filteredSkills.length
   // });
-
-
 
   // Animation Variants
   const containerVariants = {
@@ -1190,7 +1206,7 @@ const Portfolio = () => {
                     { icon: Award, label: 'Experience', value: `${years} Years`, color: '#a855f7' },
                     { icon: Code, label: 'Focus', value: 'Web Apps', color: '#ec4899' },
                     { icon: Briefcase, label: 'Role', value: 'Tech Lead', color: '#3b82f6' },
-                    { icon: Calendar, label: 'Industry', value: 'Manufacturing', color: '#10b981' }
+                    { icon: Calendar, label: 'Industry', value: 'Manufacturing', color: '#10b981' },               
                   ].map((item, index) => (
                     <motion.div
                       key={index}
@@ -1269,7 +1285,10 @@ const Portfolio = () => {
                     { title: 'System Architecture', desc: 'Scalable enterprise application design' },
                     { title: 'Process Optimization', desc: 'Digital manufacturing workflow solutions' },
                     { title: 'Full Stack Development', desc: 'End-to-end modern web applications' },
-                    { title: 'Stakeholder Management', desc: 'Technical-business requirement bridging' }
+                    { title: 'Stakeholder Management', desc: 'Technical-business requirement bridging' },                    
+                    { title: 'Agile Methodologies', desc: 'Scrum, Kanban, and Lean practices' },
+                    { title: 'Data-Driven Insights', desc: 'Analytics for manufacturing performance' },
+                    { title: 'Testing Strategies', desc: 'Comprehensive test planning and execution' }
                   ].map((item, index) => (
                     <motion.div
                       key={index}
@@ -1767,7 +1786,7 @@ const Portfolio = () => {
                 flexWrap: 'wrap'
               }}
             >
-              {['All Skills','Frontend', 'Backend', 'Database', 'DevOps', 'Architecture', 'Process'].map((cat) => (
+              {['All Skills','Frontend', 'Backend', 'Database', 'DevOps', 'Architecture', 'Process', 'Testing'].map((cat) => (
                 <motion.button
                   key={cat}
                   whileHover={{ scale: 1.05 }}
