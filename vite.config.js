@@ -5,7 +5,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     host: true,          // Docker access allow
-    port: 5173,
+    port: 4173,
     watch: {
       usePolling: true   // Windows + Docker fix
     }

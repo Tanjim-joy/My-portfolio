@@ -33,24 +33,19 @@ const Portfolio = () => {
   
   
   // Refs
-  const cursorRef = useRef(null);
   const formRef = useRef(null);
 
   // Scroll Progress
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30});
 
-  // Mouse Position for Custom Cursor
   useEffect(() => {
     const handleMouseMove = (e) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
-      if (cursorRef.current && !isMobile) {
-        cursorRef.current.style.transform = `translate(${e.clientX - 20}px, ${e.clientY - 20}px)`;
-      }
     };
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, [isMobile]);
+  }, []);
   
 
   // Screen Size Detection
@@ -221,7 +216,7 @@ const Portfolio = () => {
       features: ['Student enrollment', 'Attendance tracking', 'Fee collection', 'Performance analytics', 'Role-based access'],
       liveLink: 'https://tanjims.bsite.net/Identity/Account/Login',
       type: 'enterprise',
-      image: 'https://via.placeholder.com/600x400/1e293b/a855f7?text=Coaching+System'
+      image: '/Features-of-coaching-class-software.jpg'
     },
     {
       title: 'Inventory Management System',
@@ -230,8 +225,17 @@ const Portfolio = () => {
       features: ['Real-time tracking', 'Supplier management', 'Stock alerts', 'Purchase orders', 'Reports'],
       liveLink: 'https://inventorysys.bsite.net/Identity/Account/Login',
       type: 'business',
-      image: 'https://via.placeholder.com/600x400/1e293b/ec4899?text=Inventory+System'
+      image: '/inventory-management-system-services-870.jpg'
     },
+    {
+      title: 'GPS Fleet Tracking & Geofence Management System',
+      description: 'A real-time fleet tracking solution built with React and MySQL, featuring geofence alerts, route visualization, and integrated reporting.',
+      technologies: ['React', 'Vite', 'MySQL', 'RESTful API'],
+      features: ['Live GPS tracking', 'Geofence alerts', 'Route history', 'Driver management', 'Telegram notifications'],
+      liveLink: 'https://github.com/Tanjim-joy/GPS-Tracker-',
+      type: 'business',
+      image: '/Gps_track.webp'
+    }
   ];
 
   const experiences = [
@@ -407,26 +411,6 @@ const Portfolio = () => {
       >
         Skip to main content
       </a>
-
-      {/* Custom Cursor (Desktop Only) */}
-      {!isMobile && (
-        <motion.div
-          ref={cursorRef}
-          style={{
-            position: 'fixed',
-            width: 40,
-            height: 40,
-            borderRadius: '50%',
-            border: `2px solid ${isDarkMode ? 'rgba(168, 85, 247, 0.6)' : 'rgba(124, 58, 237, 0.8)'}`,
-            pointerEvents: 'none',
-            zIndex: 9999,
-            transition: 'transform 0.1s ease-out',
-            mixBlendMode: 'difference'
-          }}
-          animate={{ scale: 1 }}
-          whileHover={{ scale: 1.5, borderColor: '#ec4899' }}
-        />
-      )}
 
       {/* Animated Background Elements */}
       <motion.div
@@ -2058,34 +2042,34 @@ const Portfolio = () => {
                       overflow: 'hidden'
                     }}
                   >
-                    {/* Project Image Placeholder */}
                     <div style={{
                       width: '100%',
                       aspectRatio: '16/9',
                       borderRadius: '1rem',
                       marginBottom: '1.5rem',
-                      background: `linear-gradient(135deg, ${project.type === 'enterprise' ? '#7c3aed' : '#db2777'}20, ${project.type === 'enterprise' ? '#a855f7' : '#ec4899'}10)`,
-                      border: `1px solid ${project.type === 'enterprise' ? 'rgba(124, 58, 237, 0.3)' : 'rgba(219, 39, 119, 0.3)'}`,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
                       position: 'relative',
-                      overflow: 'hidden'
+                      overflow: 'hidden',
+                      background: isDarkMode ? '#111827' : '#f8fafc',
+                      border: `1px solid ${project.type === 'enterprise' ? 'rgba(124, 58, 237, 0.3)' : 'rgba(219, 39, 119, 0.3)'}`
                     }}>
-                      <motion.div
-                        animate={{ scale: [1, 1.05, 1] }}
-                        transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                      <img
+                        src={project.image}
+                        alt={`${project.title} screenshot`}
                         style={{
-                          position: 'absolute',
-                          inset: 0,
-                          background: `radial-gradient(circle at 30% 30%, ${project.type === 'enterprise' ? 'rgba(124, 58, 237, 0.3)' : 'rgba(219, 39, 119, 0.3)'}, transparent 50%)`
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          display: 'block'
+                        }}
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
                         }}
                       />
-                      <Code style={{
-                        color: project.type === 'enterprise' ? '#a855f7' : '#ec4899',
-                        width: 48,
-                        height: 48,
-                        opacity: 0.8
+                      <div style={{
+                        position: 'absolute',
+                        inset: 0,
+                        background: 'linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.4))',
+                        pointerEvents: 'none'
                       }} />
                     </div>
 

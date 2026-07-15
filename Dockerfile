@@ -14,7 +14,7 @@ RUN npm ci
 COPY . . 
 
 # Expose port (default vite port is 5173)
-EXPOSE 5173
+EXPOSE 4173
 
 # Development Command - এটা ঠিক করুন
 CMD ["npm", "run", "dev", "--", "--host"]
