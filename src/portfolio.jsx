@@ -3,9 +3,10 @@ import {
   Database, User, Briefcase, Code, GraduationCap, Mail, Phone,
   MapPin, Github, Twitter, MessageCircle, Linkedin, Calendar,
   Award, MessageSquare, ArrowRight, CheckCircle, Sparkles, Star,
-  BookOpen, Trophy, Moon, Sun, Download, Copy, ArrowUp, X
+  BookOpen, Trophy, Moon, Sun, Download, Copy, ArrowUp, X, GitBranch,
+  GitCommit, GitPullRequest, Activity, TrendingUp, Flame, BarChart3
 } from 'lucide-react';
-import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
 import profileImage from './assets/2.png';
 import emailjs from '@emailjs/browser';
 
@@ -24,12 +25,16 @@ const Portfolio = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isMobile, setIsMobile] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
-  const [formStatus, setFormStatus] = useState('idle'); // idle, sending, success, error
+  const [formStatus, setFormStatus] = useState('idle');
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [activeProjectFilter, setActiveProjectFilter] = useState('all');
   const [activeSkillCategory, setActiveSkillCategory] = useState('All Skills');
+  const [activeGitHubTab, setActiveGitHubTab] = useState('streak');
+  const [githubImageErrors, setGithubImageErrors] = useState({});
+  const [githubProfileData, setGithubProfileData] = useState(null);
+  const [githubRepoData, setGithubRepoData] = useState(null);
   
   
   // Refs
@@ -74,7 +79,7 @@ const Portfolio = () => {
       setShowBackToTop(window.scrollY > 600);
       
       // Active Section Detection
-      const sections = ['about', 'experience', 'education', 'skills', 'projects', 'contact'];
+      const sections = ['about', 'experience', 'education', 'skills', 'github', 'projects', 'contact'];
       const scrollPosition = window.scrollY + 150;
       
       for (const section of sections) {
@@ -111,12 +116,10 @@ const Portfolio = () => {
 
   // Smooth Scroll
   const scrollToSection = (sectionId) => {
-    // Close menu if open (for mobile)
     if (isMenuOpen) {
       setIsMenuOpen(false);
     }  
     
-    // Small delay to allow menu to close and DOM to settle
     setTimeout(() => {
       const element = document.getElementById(sectionId);       
       if (element) {
@@ -298,38 +301,172 @@ const Portfolio = () => {
     },
   ];
 
-  const navItems = ['about', 'experience', 'education', 'skills', 'projects', 'contact'];
+  const navItems = ['about', 'experience', 'education', 'skills', 'github', 'projects', 'contact'];
   const projectFilters = ['all', 'enterprise', 'business'];
 
+  // GitHub Stats URLs
+  const githubUsername = 'Tanjim-joy';
+  const githubStatsTheme = isDarkMode ? 'tokyonight' : 'swift';
+  
+  const githubImages = {
+    streak: `https://github-readme-streak-stats.herokuapp.com/?user=${githubUsername}&theme=${isDarkMode ? 'tokyonight' : 'swift'}&hide_border=true&border_radius=12&ring=a855f7&fire=ec4899&currStreakLabel=a855f7`,
+    stats: `https://github-readme-stats.vercel.app/api?username=${githubUsername}&show_icons=true&theme=${githubStatsTheme}&hide_border=true&border_radius=12&icon_color=a855f7&title_color=a855f7&ring_color=ec4899`,
+    languages: `https://github-readme-stats.vercel.app/api/top-langs/?username=${githubUsername}&layout=compact&theme=${githubStatsTheme}&hide_border=true&border_radius=12&title_color=a855f7&text_color=${isDarkMode ? 'cbd5e1' : '475569'}&langs_count=8`,
+    trophy: `https://github-profile-trophy.vercel.app/?username=${githubUsername}&theme=algolia&no-frame=true&no-bg=true&margin-w=8&margin-h=8&column=4`,
+    contribution: `https://ghchart.rshah.org/a855f7/${githubUsername}`,
+    activity: `https://github-readme-activity-graph.vercel.app/graph?username=${githubUsername}&theme=${isDarkMode ? 'tokyo-night' : 'minimal'}&hide_border=true&area=true&bg_color=00000000&color=a855f7&line=ec4899&point=ec4899&area_color=a855f7`
+  };
+
+  const githubTabs = [
+    { id: 'streak', label: 'Streak Stats', icon: Flame },
+    { id: 'stats', label: 'Profile Stats', icon: BarChart3 },
+    { id: 'languages', label: 'Top Languages', icon: Code },
+    { id: 'activity', label: 'Activity Graph', icon: Activity },
+    { id: 'trophy', label: 'Trophies', icon: Trophy }
+  ];
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const fetchGithubMetrics = async () => {
+      try {
+        const [profileResponse, reposResponse] = await Promise.all([
+          fetch(`https://api.github.com/users/${githubUsername}`, {
+            headers: { Accept: 'application/vnd.github+json' }
+          }),
+          fetch(`https://api.github.com/users/${githubUsername}/repos?per_page=100&sort=updated`, {
+            headers: { Accept: 'application/vnd.github+json' }
+          })
+        ]);
+
+        if (!profileResponse.ok || !reposResponse.ok) {
+          throw new Error('GitHub metrics request failed');
+        }
+
+        const profile = await profileResponse.json();
+        const repos = await reposResponse.json();
+
+        const languageCounts = repos.reduce((acc, repo) => {
+          if (repo.language) {
+            acc[repo.language] = (acc[repo.language] || 0) + 1;
+          }
+          return acc;
+        }, {});
+
+        const topLanguages = Object.entries(languageCounts)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 3)
+          .map(([name]) => name);
+
+        const totalStars = repos.reduce((sum, repo) => sum + (repo.stargazers_count || 0), 0);
+        const latestPush = repos.find((repo) => repo.pushed_at)?.pushed_at || profile.updated_at;
+        const daysSinceActivity = latestPush
+          ? Math.max(1, Math.min(365, Math.floor((Date.now() - new Date(latestPush)) / 86400000)))
+          : 1;
+
+        if (!cancelled) {
+          setGithubProfileData({
+            publicRepos: profile.public_repos ?? 0,
+            followers: profile.followers ?? 0,
+            following: profile.following ?? 0,
+            totalStars,
+            joinedAt: profile.created_at ?? null,
+            updatedAt: profile.updated_at ?? null,
+            bio: profile.bio ?? 'Open Source Contributor'
+          });
+          setGithubRepoData({
+            topLanguages,
+            latestPush,
+            daysSinceActivity
+          });
+        }
+      } catch {
+        if (!cancelled) {
+          setGithubProfileData(null);
+          setGithubRepoData(null);
+        }
+      }
+    };
+
+    fetchGithubMetrics();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [githubUsername]);
   
   // Filter Projects
   const filteredProjects = activeProjectFilter === 'all' 
   ? projects 
   : projects.filter(p => p.type === activeProjectFilter);
 
-  // console.log('Project Filters Debug:', {
-  //   activeProjectFilter,
-  //   projectFilters,
-  //   projectsCount: projects.length,
-  //   filteredCount: filteredProjects.length
-  // });
-  
-  // useEffect(() => {
-  //   console.log('Active Project Changed:', activeProjectFilter);    
-  //       console.log('Filtered Projects:', filteredProjects.map(p => p.title));
-
-  // },[activeProjectFilter, filteredProjects]);
-
   // Filter Skills
   const filteredSkills = activeSkillCategory === 'All Skills'
   ? skills
   : skills.filter(s => s.category === activeSkillCategory);
 
-  // console.log('Skills Filter Debug:', {
-  //   activeSkillCategory,
-  //   skillsCount: skills.length,
-  //   filteredCount: filteredSkills.length
-  // });
+  const githubSummaryStats = [
+    {
+      title: 'Current Streak',
+      value: githubRepoData ? `${githubRepoData.daysSinceActivity}d` : 'Active',
+      description: 'Recent coding activity',
+      icon: Flame,
+      color: '#ec4899',
+      gradient: 'linear-gradient(135deg, rgba(236, 72, 153, 0.15), rgba(236, 72, 153, 0.05))'
+    },
+    {
+      title: 'Total Contributions',
+      value: githubProfileData ? `${githubProfileData.publicRepos}` : '0',
+      description: 'Public repositories & stars',
+      icon: GitCommit,
+      color: '#a855f7',
+      gradient: 'linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(168, 85, 247, 0.05))'
+    },
+    {
+      title: 'Top Languages',
+      value: githubRepoData?.topLanguages?.[0] || 'JS',
+      description: 'Most active languages on GitHub',
+      icon: Code,
+      color: '#3b82f6',
+      gradient: 'linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(59, 130, 246, 0.05))'
+    },
+    {
+      title: 'Achievements',
+      value: githubProfileData ? `${githubProfileData.followers}` : '0',
+      description: 'Followers and milestones',
+      icon: Trophy,
+      color: '#f59e0b',
+      gradient: 'linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(245, 158, 11, 0.05))'
+    }
+  ];
+
+  const githubFallbackItems = (() => {
+    if (activeGitHubTab === 'stats') {
+      return [
+        { label: 'Public Repos', value: githubProfileData?.publicRepos ?? 0 },
+        { label: 'Followers', value: githubProfileData?.followers ?? 0 },
+        { label: 'Following', value: githubProfileData?.following ?? 0 },
+        { label: 'Stars', value: githubProfileData?.totalStars ?? 0 }
+      ];
+    }
+
+    if (activeGitHubTab === 'languages') {
+      const languages = githubRepoData?.topLanguages?.length ? githubRepoData.topLanguages : ['JavaScript'];
+      return [
+        { label: 'Top Language', value: languages[0] },
+        { label: 'Languages', value: languages.slice(0, 3).join(' • ') },
+        { label: 'Repos', value: githubProfileData?.publicRepos ?? 0 },
+        { label: 'Last Activity', value: githubRepoData?.daysSinceActivity ? `${githubRepoData.daysSinceActivity}d ago` : 'Recent' }
+      ];
+    }
+
+    return [
+      { label: 'Repos', value: githubProfileData?.publicRepos ?? 0 },
+      { label: 'Followers', value: githubProfileData?.followers ?? 0 },
+      { label: 'Stars', value: githubProfileData?.totalStars ?? 0 },
+      { label: 'Top Lang', value: githubRepoData?.topLanguages?.[0] || 'JavaScript' }
+    ];
+  })();
 
   // Animation Variants
   const containerVariants = {
@@ -1800,7 +1937,7 @@ const Portfolio = () => {
             <motion.div
               variants={containerVariants}
               initial="hidden"
-              animate="show" // Fixed typo and changed from whileInView to animate
+              animate="show"
               transition={{ delay: 0.8 }}
               style={{
                 display: 'grid',
@@ -1907,10 +2044,522 @@ const Portfolio = () => {
                   }}
                 >
                   <Code style={{ width: 48, height: 48, margin: '0 auto 1rem', opacity: 0.5 }} />
-                  <p>এই ক্যাটাগরিতে কোনো স্কিল পাওয়া যায়নি।</p>
+                  <p>এই ক্যাটাগরিতে কোনো স্কিল পাওয়া যায়নি।</p>
                   <p style={{ fontSize: '0.9rem', opacity: 0.7 }}>সব স্কিল দেখতে "All Skills" সিলেক্ট করুন।</p>
                 </motion.div>
               )}
+            </motion.div>
+          </div>
+        </section>
+
+        {/* GitHub Analysis Section - NEW */}
+        <section id="github" style={{
+          padding: 'clamp(4rem, 12vh, 8rem) clamp(1rem, 4vw, 2rem)',
+          background: isDarkMode ? 'rgba(15, 23, 42, 0.4)' : 'rgba(241, 245, 249, 0.5)',
+          position: 'relative'
+        }}>
+          <div style={{ maxWidth: '1400px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true, margin: '-100px' }}
+              style={{ textAlign: 'center', marginBottom: 'clamp(3rem, 8vw, 5rem)' }}
+            >
+              <motion.span
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                style={{
+                  display: 'inline-block',
+                  padding: '0.5rem 1.25rem',
+                  background: isDarkMode ? 'rgba(139, 92, 246, 0.15)' : 'rgba(124, 58, 237, 0.1)',
+                  borderRadius: '9999px',
+                  color: '#a855f7',
+                  fontWeight: 600,
+                  fontSize: 'clamp(0.85rem, 2.5vw, 1rem)',
+                  marginBottom: '1.5rem',
+                  border: `1px solid ${isDarkMode ? 'rgba(139, 92, 246, 0.3)' : 'rgba(124, 58, 237, 0.2)'}`
+                }}
+              >
+                🐙 GitHub Analytics
+              </motion.span>
+              <h2 style={{
+                fontSize: 'clamp(1.8rem, 6vw, 3.5rem)',
+                fontWeight: 800,
+                marginBottom: '1.5rem',
+                background: 'linear-gradient(90deg, #a855f7, #ec4899)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundSize: '200% 200%',
+                animation: 'gradientShift 3s ease infinite'
+              }}>
+                My Coding Journey
+              </h2>
+              <p style={{
+                color: isDarkMode ? '#cbd5e1' : '#475569',
+                fontSize: 'clamp(0.95rem, 2.5vw, 1.1rem)',
+                maxWidth: '700px',
+                margin: '0 auto 1.5rem',
+                lineHeight: 1.7
+              }}>
+                A real-time snapshot of my open-source contributions, coding consistency, and the technologies I work with every day.
+              </p>
+              <div style={{
+                width: '5rem',
+                height: '4px',
+                background: 'linear-gradient(90deg, #a855f7, #ec4899)',
+                margin: '0 auto',
+                borderRadius: '2px'
+              }} />
+            </motion.div>
+
+            {/* GitHub Profile Header Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true, margin: '-50px' }}
+              style={{
+                background: isDarkMode ? 'rgba(30, 41, 59, 0.5)' : 'rgba(255, 255, 255, 0.8)',
+                backdropFilter: 'blur(20px)',
+                borderRadius: '1.5rem',
+                padding: 'clamp(1.5rem, 3vw, 2rem)',
+                border: `1px solid ${isDarkMode ? 'rgba(139, 92, 246, 0.3)' : 'rgba(124, 58, 237, 0.2)'}`,
+                boxShadow: isDarkMode 
+                  ? '0 10px 40px rgba(0, 0, 0, 0.3)' 
+                  : '0 10px 40px rgba(0, 0, 0, 0.08)',
+                marginBottom: 'clamp(1.5rem, 4vw, 2.5rem)',
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '1.5rem'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
+                <motion.div
+                  whileHover={{ scale: 1.05, rotate: 5 }}
+                  style={{
+                    width: 'clamp(56px, 10vw, 72px)',
+                    height: 'clamp(56px, 10vw, 72px)',
+                    borderRadius: '50%',
+                    background: 'linear-gradient(135deg, #7c3aed, #db2777)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: '0 8px 25px rgba(124, 58, 237, 0.4)',
+                    flexShrink: 0
+                  }}
+                >
+                  <Github style={{ color: 'white', width: 'clamp(28px, 5vw, 36px)', height: 'clamp(28px, 5vw, 36px)' }} />
+                </motion.div>
+                <div>
+                  <h3 style={{
+                    fontSize: 'clamp(1.15rem, 3vw, 1.5rem)',
+                    fontWeight: 700,
+                    color: isDarkMode ? 'white' : '#1e293b',
+                    marginBottom: '0.25rem'
+                  }}>
+                    @{githubUsername}
+                  </h3>
+                  <p style={{
+                    color: isDarkMode ? '#94a3b8' : '#64748b',
+                    fontSize: 'clamp(0.85rem, 2vw, 0.95rem)'
+                  }}>
+                    Open Source Contributor • Building with passion
+                  </p>
+                </div>
+              </div>
+
+              <motion.a
+                href={`https://github.com/${githubUsername}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.625rem',
+                  padding: '0.75rem 1.5rem',
+                  background: 'linear-gradient(90deg, #7c3aed, #db2777)',
+                  borderRadius: '1rem',
+                  color: 'white',
+                  textDecoration: 'none',
+                  fontWeight: 600,
+                  fontSize: 'clamp(0.9rem, 2vw, 1rem)',
+                  boxShadow: '0 8px 25px rgba(124, 58, 237, 0.35)',
+                  minHeight: 48
+                }}
+              >
+                <Github style={{ width: 18, height: 18 }} />
+                Visit Profile
+                <ArrowRight style={{ width: 16, height: 16 }} />
+              </motion.a>
+            </motion.div>
+
+            {/* Tab Navigation */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                gap: '0.5rem',
+                marginBottom: 'clamp(1.5rem, 4vw, 2.5rem)',
+                flexWrap: 'wrap',
+                padding: '0.5rem',
+                background: isDarkMode ? 'rgba(30, 41, 59, 0.4)' : 'rgba(255, 255, 255, 0.6)',
+                backdropFilter: 'blur(20px)',
+                borderRadius: '1.25rem',
+                border: `1px solid ${isDarkMode ? 'rgba(139, 92, 246, 0.2)' : 'rgba(124, 58, 237, 0.15)'}`,
+                maxWidth: '900px',
+                margin: '0 auto clamp(1.5rem, 4vw, 2.5rem)'
+              }}
+            >
+              {githubTabs.map((tab) => {
+                const TabIcon = tab.icon;
+                const isActive = activeGitHubTab === tab.id;
+                return (
+                  <motion.button
+                    key={tab.id}
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={() => setActiveGitHubTab(tab.id)}
+                    style={{
+                      position: 'relative',
+                      padding: '0.75rem 1.25rem',
+                      background: isActive
+                        ? 'linear-gradient(90deg, #7c3aed, #db2777)'
+                        : 'transparent',
+                      border: 'none',
+                      borderRadius: '0.875rem',
+                      color: isActive ? 'white' : (isDarkMode ? '#cbd5e1' : '#475569'),
+                      fontWeight: isActive ? 600 : 500,
+                      fontSize: 'clamp(0.8rem, 2vw, 0.95rem)',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      transition: 'all 0.2s ease',
+                      minHeight: 44
+                    }}
+                  >
+                    <TabIcon style={{ width: 16, height: 16 }} />
+                    {tab.label}
+                  </motion.button>
+                );
+              })}
+            </motion.div>
+
+            {/* Tab Content */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeGitHubTab}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.4 }}
+                style={{
+                  background: isDarkMode ? 'rgba(30, 41, 59, 0.5)' : 'rgba(255, 255, 255, 0.8)',
+                  backdropFilter: 'blur(20px)',
+                  borderRadius: '1.5rem',
+                  padding: 'clamp(1.5rem, 4vw, 2.5rem)',
+                  border: `1px solid ${isDarkMode ? 'rgba(139, 92, 246, 0.3)' : 'rgba(124, 58, 237, 0.2)'}`,
+                  boxShadow: isDarkMode 
+                    ? '0 10px 40px rgba(0, 0, 0, 0.3)' 
+                    : '0 10px 40px rgba(0, 0, 0, 0.08)',
+                  marginBottom: 'clamp(1.5rem, 4vw, 2.5rem)'
+                }}
+              >
+                {/* Tab Header */}
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.875rem',
+                  marginBottom: '1.5rem',
+                  paddingBottom: '1.25rem',
+                  borderBottom: `1px solid ${isDarkMode ? 'rgba(139, 92, 246, 0.2)' : 'rgba(124, 58, 237, 0.15)'}`
+                }}>
+                  <div style={{
+                    background: 'rgba(139, 92, 246, 0.15)',
+                    padding: '0.75rem',
+                    borderRadius: '0.875rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    {(() => {
+                      const ActiveIcon = githubTabs.find(t => t.id === activeGitHubTab)?.icon || Activity;
+                      return <ActiveIcon style={{ color: '#a855f7', width: 22, height: 22 }} />;
+                    })()}
+                  </div>
+                  <div>
+                    <h3 style={{
+                      fontSize: 'clamp(1.1rem, 3vw, 1.4rem)',
+                      fontWeight: 700,
+                      color: isDarkMode ? 'white' : '#1e293b',
+                      marginBottom: '0.25rem'
+                    }}>
+                      {githubTabs.find(t => t.id === activeGitHubTab)?.label}
+                    </h3>
+                    <p style={{
+                      color: isDarkMode ? '#94a3b8' : '#64748b',
+                      fontSize: 'clamp(0.8rem, 2vw, 0.9rem)'
+                    }}>
+                      {activeGitHubTab === 'streak' && 'Track my daily coding consistency and current streak'}
+                      {activeGitHubTab === 'stats' && 'Overall GitHub profile statistics and contributions'}
+                      {activeGitHubTab === 'languages' && 'Most frequently used programming languages'}
+                      {activeGitHubTab === 'activity' && 'Visual representation of my coding activity over time'}
+                      {activeGitHubTab === 'trophy' && 'Achievements and milestones earned on GitHub'}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Image Container */}
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  minHeight: '200px',
+                  padding: 'clamp(1rem, 3vw, 2rem)',
+                  background: isDarkMode ? 'rgba(15, 23, 42, 0.4)' : 'rgba(248, 250, 252, 0.6)',
+                  borderRadius: '1rem',
+                  border: `1px dashed ${isDarkMode ? 'rgba(139, 92, 246, 0.3)' : 'rgba(124, 58, 237, 0.2)'}`
+                }}>
+                  {githubImageErrors[activeGitHubTab] ? (
+                    <div style={{
+                      textAlign: 'center',
+                      padding: 'clamp(1rem, 3vw, 2rem)',
+                      color: isDarkMode ? '#cbd5e1' : '#475569',
+                      width: '100%'
+                    }}>
+                      <div style={{ width: '100%', maxWidth: '720px', margin: '0 auto' }}>
+                        {/* <div style={{
+                          display: 'flex',
+                          justifyContent: 'flex-end',
+                          marginBottom: '1rem'
+                        }}>
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => setGithubImageErrors(prev => ({ ...prev, [activeGitHubTab]: false }))}
+                            style={{
+                              padding: '0.625rem 1.25rem',
+                              background: 'linear-gradient(90deg, #7c3aed, #db2777)',
+                              border: 'none',
+                              borderRadius: '0.75rem',
+                              color: 'white',
+                              fontWeight: 600,
+                              cursor: 'pointer',
+                              fontSize: '0.9rem'
+                            }}
+                          >
+                            Retry
+                          </motion.button>
+                        </div> */}
+
+                        <div style={{
+                          display: 'grid',
+                          gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+                          gap: '1rem'
+                        }}>
+                          {githubFallbackItems.map((item) => (
+                            <div key={item.label} style={{
+                              padding: '1rem',
+                              borderRadius: '0.875rem',
+                              background: isDarkMode ? 'rgba(15, 23, 42, 0.6)' : 'rgba(248, 250, 252, 0.9)',
+                              border: `1px solid ${isDarkMode ? 'rgba(139, 92, 246, 0.25)' : 'rgba(124, 58, 237, 0.2)'}`,
+                              boxShadow: isDarkMode ? '0 10px 20px rgba(0, 0, 0, 0.15)' : '0 10px 20px rgba(0, 0, 0, 0.05)'
+                            }}>
+                              <p style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.08em', opacity: 0.7, marginBottom: '0.35rem' }}>{item.label}</p>
+                              <p style={{ fontSize: '1.15rem', fontWeight: 700, color: isDarkMode ? 'white' : '#1e293b' }}>{item.value}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <motion.img
+                      key={activeGitHubTab}
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.4 }}
+                      src={githubImages[activeGitHubTab]}
+                      alt={`GitHub ${activeGitHubTab} statistics for ${githubUsername}`}
+                      style={{
+                        maxWidth: '100%',
+                        height: 'auto',
+                        borderRadius: '0.75rem'
+                      }}
+                      onError={() => setGithubImageErrors(prev => ({ ...prev, [activeGitHubTab]: true }))}
+                    />
+                  )}
+                </div>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Quick Stats Grid - Always Visible */}
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, margin: '-50px' }}
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+                gap: 'clamp(1rem, 3vw, 1.5rem)'
+              }}
+            >
+              {githubSummaryStats.map((stat, index) => {
+                const StatIcon = stat.icon;
+                return (
+                  <motion.div
+                    key={index}
+                    variants={itemVariants}
+                    whileHover={{ y: -5, scale: 1.02 }}
+                    style={{
+                      background: isDarkMode ? 'rgba(30, 41, 59, 0.5)' : 'rgba(255, 255, 255, 0.8)',
+                      backdropFilter: 'blur(20px)',
+                      borderRadius: '1.25rem',
+                      padding: 'clamp(1.25rem, 3vw, 1.75rem)',
+                      border: `1px solid ${isDarkMode ? 'rgba(139, 92, 246, 0.3)' : 'rgba(124, 58, 237, 0.2)'}`,
+                      boxShadow: isDarkMode 
+                        ? '0 10px 30px rgba(0, 0, 0, 0.25)' 
+                        : '0 10px 30px rgba(0, 0, 0, 0.06)',
+                      transition: 'all 0.3s ease',
+                      position: 'relative',
+                      overflow: 'hidden'
+                    }}
+                  >
+                    <div style={{
+                      position: 'absolute',
+                      top: 0,
+                      right: 0,
+                      width: '100px',
+                      height: '100px',
+                      background: stat.gradient,
+                      borderRadius: '50%',
+                      transform: 'translate(30%, -30%)',
+                      filter: 'blur(20px)'
+                    }} />
+                    <div style={{ position: 'relative', zIndex: 1 }}>
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        marginBottom: '1rem'
+                      }}>
+                        <div style={{
+                          background: `${stat.color}15`,
+                          padding: '0.75rem',
+                          borderRadius: '0.875rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          border: `1px solid ${stat.color}30`
+                        }}>
+                          <StatIcon style={{ color: stat.color, width: 22, height: 22 }} />
+                        </div>
+                        <span style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)' }}>{stat.value}</span>
+                      </div>
+                      <h4 style={{
+                        fontWeight: 700,
+                        fontSize: 'clamp(1rem, 2.5vw, 1.15rem)',
+                        color: isDarkMode ? 'white' : '#1e293b',
+                        marginBottom: '0.375rem'
+                      }}>
+                        {stat.title}
+                      </h4>
+                      <p style={{
+                        color: isDarkMode ? '#94a3b8' : '#64748b',
+                        fontSize: 'clamp(0.8rem, 2vw, 0.9rem)',
+                        lineHeight: 1.5
+                      }}>
+                        {stat.description}
+                      </p>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+
+            {/* Contribution Graph - Full Width */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              viewport={{ once: true, margin: '-50px' }}
+              style={{
+                marginTop: 'clamp(1.5rem, 4vw, 2.5rem)',
+                background: isDarkMode ? 'rgba(30, 41, 59, 0.5)' : 'rgba(255, 255, 255, 0.8)',
+                backdropFilter: 'blur(20px)',
+                borderRadius: '1.5rem',
+                padding: 'clamp(1.5rem, 4vw, 2.5rem)',
+                border: `1px solid ${isDarkMode ? 'rgba(139, 92, 246, 0.3)' : 'rgba(124, 58, 237, 0.2)'}`,
+                boxShadow: isDarkMode 
+                  ? '0 10px 40px rgba(0, 0, 0, 0.3)' 
+                  : '0 10px 40px rgba(0, 0, 0, 0.08)',
+                overflow: 'hidden'
+              }}
+            >
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.875rem',
+                marginBottom: '1.5rem'
+              }}>
+                <div style={{
+                  background: 'rgba(139, 92, 246, 0.15)',
+                  padding: '0.75rem',
+                  borderRadius: '0.875rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <TrendingUp style={{ color: '#a855f7', width: 22, height: 22 }} />
+                </div>
+                <div>
+                  <h3 style={{
+                    fontSize: 'clamp(1.1rem, 3vw, 1.4rem)',
+                    fontWeight: 700,
+                    color: isDarkMode ? 'white' : '#1e293b',
+                    marginBottom: '0.25rem'
+                  }}>
+                    Yearly Contribution Graph
+                  </h3>
+                  <p style={{
+                    color: isDarkMode ? '#94a3b8' : '#64748b',
+                    fontSize: 'clamp(0.8rem, 2vw, 0.9rem)'
+                  }}>
+                    My coding activity visualized across the year
+                  </p>
+                </div>
+              </div>
+
+              <div style={{
+                background: isDarkMode ? 'rgba(15, 23, 42, 0.4)' : 'rgba(248, 250, 252, 0.6)',
+                borderRadius: '1rem',
+                padding: 'clamp(0.75rem, 2vw, 1.5rem)',
+                border: `1px solid ${isDarkMode ? 'rgba(139, 92, 246, 0.2)' : 'rgba(124, 58, 237, 0.15)'}`,
+                overflowX: 'auto'
+              }}>
+                <img
+                  src={githubImages.contribution}
+                  alt="GitHub contribution chart"
+                  style={{
+                    width: '100%',
+                    minWidth: '600px',
+                    height: 'auto',
+                    display: 'block',
+                    borderRadius: '0.5rem'
+                  }}
+                  onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                />
+              </div>
             </motion.div>
           </div>
         </section>
@@ -1971,7 +2620,7 @@ const Portfolio = () => {
             {/* Project Filter */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }} // Changed from whileInView to animate
+              animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
               style={{
                 display: 'flex',
@@ -2012,7 +2661,7 @@ const Portfolio = () => {
             <motion.div
               variants={containerVariants}
               initial="hidden"
-              animate="show" // Changed from whileInView to animate
+              animate="show"
               transition={{ delay: 0.8 }}
               style={{
                 display: 'grid',
@@ -2696,23 +3345,6 @@ const Portfolio = () => {
             gap: '1.5rem',
             flexWrap: 'wrap'
           }}>
-            {/* {['Privacy', 'Terms', 'Sitemap'].map((link) => (
-              <a
-                key={link}
-                href="#"
-                style={{
-                  color: isDarkMode ? '#94a3b8' : '#64748b',
-                  textDecoration: 'none',
-                  fontSize: '0.9rem',
-                  transition: 'color 0.2s',
-                  padding: '0.5rem'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.color = '#a855f7'}
-                onMouseLeave={(e) => e.currentTarget.style.color = isDarkMode ? '#94a3b8' : '#64748b'}
-              >
-                {link}
-              </a>
-            ))} */}
           </div>
         </div>
       </footer>
@@ -2853,7 +3485,7 @@ const Portfolio = () => {
           
           input, textarea, button {
             min-height: 48px !important;
-            font-size: 16px !important; /* Prevent iOS zoom */
+            font-size: 16px !important;
           }
         }
         
