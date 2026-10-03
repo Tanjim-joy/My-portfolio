@@ -11,11 +11,15 @@ import profileImage from './assets/2.png';
 import emailjs from '@emailjs/browser';
 
 // Constants
-const startdate = new Date(2023, 3, 11);
+const careerStartDate = new Date(2016, 1, 1);    // Site Engineer at Fair & Appropriate Technology
+const startdate = new Date(2023, 2, 1);          // Software Engineer apprenticeship at WALTON
 const presentDate = new Date();
-const diffInMs = presentDate - startdate;
-const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+const yearsSinceStart = presentDate - startdate;
+const careerMs = presentDate - careerStartDate;
+const diffInDays = yearsSinceStart / (1000 * 60 * 60 * 24);
+const careerDays = careerMs / (1000 * 60 * 60 * 24);
 const years = (diffInDays / 365.25).toFixed(1);
+const careerYears = Math.floor(careerDays / 365.25);
 const currentYear = new Date().getFullYear();
 
 const Portfolio = () => {
@@ -209,6 +213,10 @@ const Portfolio = () => {
     { name: 'Unit Testing', level: 75, category: 'Testing' },
     { name: 'Integration Testing', level: 70, category: 'Testing' },    
     { name: 'Postman', level: 90, category: 'Testing' },
+    { name: 'Microwave Link Configuration', level: 85, category: 'Telecom' },
+    { name: 'Antenna Installation & Alignment', level: 82, category: 'Telecom' },
+    { name: 'Link Commissioning & Testing', level: 80, category: 'Telecom' },
+    { name: 'RF Troubleshooting', level: 78, category: 'Telecom' },
   ];
 
   const projects = [
@@ -243,10 +251,16 @@ const Portfolio = () => {
 
   const experiences = [
     {
-      title: 'Deputy Assistant Director',
+      title: 'Senior Deputy Assistant Director',
       company: 'WALTON Hi-Tech Industries PLC',
-      period: 'Present',
-      description: 'Leading the Manufacturing Automations team in developing robust, scalable web applications that drive operational efficiency and digital transformation in manufacturing processes.',
+      period: 'Oct 2026 - Present',
+      duration: 'Promoted 1 Oct 2026',
+      badge: 'Promoted on 1 October 2026',
+      employmentType: 'Full-time',
+      workMode: 'On-site',
+      location: 'Gazipur District, Dhaka, Bangladesh',
+      skills: ['Software Development', 'Node.js', 'C#', 'ASP.NET Core', 'Team Leadership'],
+      description: 'Promoted to Senior Deputy Assistant Director on 1 October 2026. Leading the Manufacturing Automations team in developing robust, scalable web applications that drive operational efficiency and digital transformation in manufacturing processes.',
       achievements: [
         'Developed desktop applications for label printing and packing using C#, .NET, and WPF, streamlining production and logistics operations',
         'Designed and implemented enterprise-level web applications using ASP.NET Core and C#',
@@ -258,10 +272,15 @@ const Portfolio = () => {
       type: 'leadership',
     },
     {
-      title: 'Web Application Developer',
+      title: 'Deputy Assistant Director',
       company: 'WALTON Hi-Tech Industries PLC',
-      period: '2022 - Present',
-      description: 'Developed business-critical web applications supporting manufacturing operations with focus on scalability and efficiency.',
+      period: 'Dec 2024 - Oct 2026',
+      duration: '1 yr 11 mos',
+      employmentType: 'Full-time',
+      workMode: 'On-site',
+      location: 'Gazipur District, Dhaka, Bangladesh',
+      skills: ['Software Development', 'Node.js', 'C#', '.NET'],
+      description: 'Served as Deputy Assistant Director within the Manufacturing Automations team, delivering business-critical applications and automation solutions for manufacturing operations.',
       achievements: [
         'Implemented enterprise-level solutions using PHP, C# & .NET and database technologies',
         'Led API development projects integrating multiple internal systems',
@@ -269,10 +288,106 @@ const Portfolio = () => {
         'Reduced deployment time by 60% through Docker-based environments',
         'Designed reusable modules reducing future development effort by 30%',
         'Maintained and enhanced existing applications, ensuring high availability and performance in a production environment',
-      ],        
+      ],
+      type: 'leadership',
+    },
+    {
+      title: 'Senior Principal Officer',
+      company: 'WALTON Hi-Tech Industries PLC',
+      period: 'Sep 2023 - Dec 2024',
+      duration: '1 yr 4 mos',
+      employmentType: 'Full-time',
+      workMode: 'On-site',
+      location: 'Gazipur, Dhaka, Bangladesh',
+      skills: ['Software Development', 'Node.js', 'C#', 'MySQL'],
+      description: 'Worked as Senior Principal Officer building and maintaining manufacturing web applications, translating production requirements into reliable software deliverables.',
+      achievements: [
+        'Developed and maintained production web applications serving manufacturing operations',
+        'Collaborated with production teams to gather, clarify, and prioritize business requirements',
+        'Wrote efficient SQL queries and tuned database schemas for reporting workloads',
+        'Participated in code reviews and enforced coding standards across the team',
+        'Resolved production defects and provided technical support to end users',
+      ],
+      type: 'leadership',
+    },
+    {
+      title: 'Principal Officer',
+      company: 'WALTON Hi-Tech Industries PLC',
+      period: 'Sep 2023 - Mar 2024',
+      duration: '7 mos',
+      employmentType: 'Full-time',
+      location: 'Gazipur District, Dhaka, Bangladesh',
+      skills: ['Software Development', 'C#', 'Database'],
+      description: 'Joined WALTON as Principal Officer, moving from field engineering into software development for manufacturing operations.',
+      achievements: [
+        'Transitioned from telecom field engineering into enterprise software development',
+        'Gained hands-on experience building desktop and web applications for manufacturing',
+        'Worked within an agile team environment with regular deliverables and reviews',
+        'Documented technical designs and development workflows',
+      ],
       type: 'development',
     },
+    {
+      title: 'Software Engineer',
+      subtitle: 'Apprenticeship',
+      company: 'WALTON Hi-Tech Industries PLC',
+      period: 'Mar 2023 - Sep 2023',
+      duration: '7 mos',
+      employmentType: 'Apprenticeship',
+      location: 'Gazipur District, Dhaka, Bangladesh',
+      skills: ['C#', '.NET', 'SQL', 'Software Development'],
+      description: 'Started the software career as a Software Engineer apprentice at WALTON Hi-Tech Industries PLC, learning enterprise application development in a manufacturing environment.',
+      achievements: [
+        'Completed an apprenticeship program in enterprise software development',
+        'Built foundational applications using C# and .NET',
+        'Learned SQL and relational database fundamentals for application data',
+        'Worked under senior developers on live manufacturing projects',
+      ],
+      type: 'development',
+    },
+    {
+      title: 'Site Engineer',
+      company: 'Fair and Appropriate Technology Ltd.',
+      period: 'Feb 2016 - Mar 2017',
+      duration: '1 yr 2 mos',
+      location: 'Bashati Dream House # 3, A 2 (2nd Floor), Road # 20, Gulshan-01, Dhaka',
+      skills: ['Communication', 'Teamwork', 'Microwave Links'],
+      description: 'Worked as a Site Engineer responsible for microwave link configuration, installation and commissioning of telecommunications infrastructure at field locations.',
+      achievements: [
+        'Configured microwave link equipment and established new point-to-point connectivity between sites',
+        'Installed microwave antennas, feeders, and associated hardware at field locations',
+        'Commissioned newly installed links by verifying signal strength, alignment, and end-to-end connectivity',
+        'Diagnosed and troubleshot link degradation, hardware faults, and performance issues to restore service quality',
+        'Documented link configuration, test results, and commissioning reports for project handover',
+      ],
+      type: 'field',
+    },
   ];
+
+  // Accent theming per experience type
+  const experienceTheme = {
+    leadership: {
+      accent: 'linear-gradient(to bottom, #a855f7, #ec4899)',
+      title: '#a855f7',
+      chipBg: isDarkMode ? 'rgba(124, 58, 237, 0.2)' : 'rgba(124, 58, 237, 0.1)',
+      chipText: '#c084fc',
+      chipBorder: isDarkMode ? 'rgba(139, 92, 246, 0.3)' : 'rgba(124, 58, 237, 0.2)'
+    },
+    development: {
+      accent: 'linear-gradient(to bottom, #3b82f6, #1d4ed8)',
+      title: '#3b82f6',
+      chipBg: isDarkMode ? 'rgba(59, 130, 246, 0.2)' : 'rgba(59, 130, 246, 0.1)',
+      chipText: '#93c5fd',
+      chipBorder: isDarkMode ? 'rgba(59, 130, 246, 0.3)' : 'rgba(59, 130, 246, 0.2)'
+    },
+    field: {
+      accent: 'linear-gradient(to bottom, #10b981, #34d399)',
+      title: '#10b981',
+      chipBg: isDarkMode ? 'rgba(16, 185, 129, 0.2)' : 'rgba(16, 185, 129, 0.1)',
+      chipText: '#6ee7b7',
+      chipBorder: isDarkMode ? 'rgba(16, 185, 129, 0.3)' : 'rgba(16, 185, 129, 0.2)'
+    }
+  };
 
   const education = [
     {
@@ -966,7 +1081,7 @@ const Portfolio = () => {
                   }}
                 >
                   <span style={{ display: 'block', color: isDarkMode ? 'white' : '#1e293b' }}>
-                    Deputy Assistant
+                    Senior Deputy 
                   </span>
                   <span style={{
                     display: 'block',
@@ -977,7 +1092,7 @@ const Portfolio = () => {
                     backgroundSize: '200% 200%',
                     animation: 'gradientShift 3s ease infinite'
                   }}>
-                    Director
+                    Assistant Director
                   </span>
                 </motion.h1>
 
@@ -1069,7 +1184,8 @@ const Portfolio = () => {
                   }}
                 >
                   {[
-                    { label: 'Years Experience', value: `${years}+` },
+                    { label: 'Years Experience', value: `${careerYears}+` },
+                    { label: 'Software & Automation', value: `${years}+` },
                     { label: 'Projects Delivered', value: '15+' },
                     { label: 'Technologies', value: '20+' }
                   ].map((stat, i) => (
@@ -1310,9 +1426,12 @@ const Portfolio = () => {
                   fontSize: 'clamp(0.95rem, 2.5vw, 1.1rem)',
                   textAlign: 'justify'
                 }}>
-                  I am currently serving as <strong style={{ color: '#a855f7' }}>Deputy Assistant Director</strong> in the 
-                  Manufacturing Automations team at <strong>WALTON Hi-Tech Industries PLC</strong>. 
-                  With <strong style={{ color: '#ec4899' }}>{years}+ years</strong> of professional experience, 
+                  I am currently serving as <strong style={{ color: '#a855f7' }}>Senior Deputy Assistant Director</strong> in the 
+                  Manufacturing Automations team at <strong>WALTON Hi-Tech Industries PLC</strong> — a promotion I received on 1 October 2026. 
+                  My journey at WALTON began in March 2023 as a <strong>Software Engineer apprentice</strong> and has grown through 
+                  Principal Officer, Senior Principal Officer, Deputy Assistant Director and now Senior Deputy Assistant Director. 
+                  With <strong style={{ color: '#ec4899' }}>{years}+ years</strong> of hands-on software and automation experience — 
+                  on top of an earlier career as a Site Engineer handling microwave link configuration, installation and commissioning — 
                   I specialize in developing robust, scalable, and business-critical web and desktop applications 
                   that drive operational efficiency and digital transformation in manufacturing processes.
                 </p>
@@ -1324,9 +1443,9 @@ const Portfolio = () => {
                   gap: '1rem'
                 }}>
                   {[
-                    { icon: Award, label: 'Experience', value: `${years} Years`, color: '#a855f7' },
-                    { icon: Code, label: 'Focus', value: 'Web Apps', color: '#ec4899' },
-                    { icon: Briefcase, label: 'Role', value: 'Tech Lead', color: '#3b82f6' },
+                    { icon: Award, label: 'Experience', value: `${careerYears}+ Years`, color: '#a855f7' },
+                    { icon: Code, label: 'Focus', value: 'Web & Desktop Apps', color: '#ec4899' },
+                    { icon: Briefcase, label: 'Role', value: 'Sr. Deputy Asst. Director', color: '#3b82f6' },
                     { icon: Calendar, label: 'Industry', value: 'Manufacturing', color: '#10b981' },               
                   ].map((item, index) => (
                     <motion.div
@@ -1409,6 +1528,7 @@ const Portfolio = () => {
                     { title: 'Stakeholder Management', desc: 'Technical-business requirement bridging' },                    
                     { title: 'Agile Methodologies', desc: 'Scrum, Kanban, and Lean practices' },
                     { title: 'Data-Driven Insights', desc: 'Analytics for manufacturing performance' },
+                    // { title: 'Telecom & RF Engineering', desc: 'Microwave link configuration, installation & commissioning' },
                     { title: 'Testing Strategies', desc: 'Comprehensive test planning and execution' }
                   ].map((item, index) => (
                     <motion.div
@@ -1545,7 +1665,9 @@ const Portfolio = () => {
                 gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))'
               }}
             >
-              {experiences.map((exp, index) => (
+              {experiences.map((exp, index) => {
+                const theme = experienceTheme[exp.type] || experienceTheme.development;
+                return (
                 <motion.div
                   key={index}
                   variants={itemVariants}
@@ -1555,7 +1677,7 @@ const Portfolio = () => {
                     backdropFilter: 'blur(20px)',
                     borderRadius: '1.5rem',
                     padding: 'clamp(1.75rem, 4vw, 2.5rem)',
-                    border: `1px solid ${isDarkMode ? 'rgba(139, 92, 246, 0.3)' : 'rgba(124, 58, 237, 0.2)'}`,
+                    border: `1px solid ${theme.chipBorder}`,
                     boxShadow: isDarkMode 
                       ? '0 10px 40px rgba(0, 0, 0, 0.3)' 
                       : '0 10px 40px rgba(0, 0, 0, 0.08)',
@@ -1571,21 +1693,67 @@ const Portfolio = () => {
                     left: 0,
                     width: '4px',
                     height: '100%',
-                    background: exp.type === 'leadership'
-                      ? 'linear-gradient(to bottom, #a855f7, #ec4899)'
-                      : 'linear-gradient(to bottom, #3b82f6, #1d4ed8)',
+                    background: theme.accent,
                     borderRadius: '1.5rem 0 0 1.5rem'
                   }} />
+
+                  {/* Promotion Badge */}
+                  {exp.badge && (
+                    <div style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      marginBottom: '1.25rem',
+                      padding: '0.5rem 1.25rem 0.5rem 0.5rem',
+                      borderRadius: '9999px',
+                      background: isDarkMode ? 'rgba(245, 158, 11, 0.15)' : 'rgba(245, 158, 11, 0.1)',
+                      border: `1px solid ${isDarkMode ? 'rgba(245, 158, 11, 0.35)' : 'rgba(245, 158, 11, 0.3)'}`,
+                      color: isDarkMode ? '#fcd34d' : '#b45309',
+                      fontWeight: 600,
+                      fontSize: 'clamp(0.75rem, 2vw, 0.85rem)'
+                    }}>
+                      <span style={{
+                        background: 'linear-gradient(135deg, #f59e0b, #fbbf24)',
+                        color: '#78350f',
+                        borderRadius: '50%',
+                        width: '22px',
+                        height: '22px',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0
+                      }}>
+                        <Award style={{ width: 14, height: 14 }} />
+                      </span>
+                      {exp.badge}
+                    </div>
+                  )}
 
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', marginBottom: '2rem', paddingLeft: '1rem' }}>
                     <div>
                       <h3 style={{
                         fontSize: 'clamp(1.3rem, 3.5vw, 1.8rem)',
                         fontWeight: 700,
-                        color: exp.type === 'leadership' ? '#a855f7' : '#3b82f6',
+                        color: theme.title,
                         marginBottom: '0.5rem'
                       }}>
                         {exp.title}
+                        {exp.subtitle && (
+                          <span style={{
+                            display: 'inline-block',
+                            marginLeft: '0.75rem',
+                            padding: '0.25rem 0.75rem',
+                            borderRadius: '9999px',
+                            background: theme.chipBg,
+                            border: `1px solid ${theme.chipBorder}`,
+                            color: theme.chipText,
+                            fontSize: 'clamp(0.7rem, 1.8vw, 0.8rem)',
+                            fontWeight: 600,
+                            verticalAlign: 'middle'
+                          }}>
+                            {exp.subtitle}
+                          </span>
+                        )}
                       </h3>
                       <p style={{
                         fontSize: 'clamp(1rem, 2.8vw, 1.25rem)',
@@ -1594,18 +1762,75 @@ const Portfolio = () => {
                       }}>
                         {exp.company}
                       </p>
+                      <div style={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        marginTop: '0.6rem',
+                        fontSize: 'clamp(0.8rem, 2.2vw, 0.9rem)',
+                        color: isDarkMode ? '#94a3b8' : '#64748b'
+                      }}>
+                        {exp.location && (
+                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+                            <MapPin style={{ width: 15, height: 15, flexShrink: 0, color: theme.title }} />
+                            {exp.location}
+                          </span>
+                        )}
+                        {exp.workMode && (
+                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+                            <MapPin style={{ width: 15, height: 15, flexShrink: 0, color: theme.title, opacity: 0.6 }} />
+                            {exp.workMode}
+                          </span>
+                        )}
+                      </div>
                     </div>
-                    <div style={{
-                      display: 'inline-flex',
-                      background: isDarkMode ? 'rgba(124, 58, 237, 0.2)' : 'rgba(124, 58, 237, 0.1)',
-                      padding: '0.5rem 1.25rem',
-                      borderRadius: '9999px',
-                      color: '#c084fc',
-                      fontWeight: 600,
-                      border: `1px solid ${isDarkMode ? 'rgba(139, 92, 246, 0.3)' : 'rgba(124, 58, 237, 0.2)'}`,
-                      fontSize: 'clamp(0.85rem, 2vw, 1rem)'
-                    }}>
-                      {exp.period}
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                      <span style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.4rem',
+                        background: theme.chipBg,
+                        padding: '0.5rem 1.25rem',
+                        borderRadius: '9999px',
+                        color: theme.chipText,
+                        fontWeight: 600,
+                        border: `1px solid ${theme.chipBorder}`,
+                        fontSize: 'clamp(0.85rem, 2vw, 1rem)'
+                      }}>
+                        <Calendar style={{ width: 15, height: 15 }} />
+                        {exp.period}
+                      </span>
+                      {exp.duration && (
+                        <span style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          background: isDarkMode ? 'rgba(15, 23, 42, 0.6)' : 'rgba(241, 245, 249, 0.9)',
+                          padding: '0.5rem 1rem',
+                          borderRadius: '9999px',
+                          color: isDarkMode ? '#94a3b8' : '#64748b',
+                          fontWeight: 500,
+                          border: `1px solid ${isDarkMode ? 'rgba(139, 92, 246, 0.2)' : 'rgba(124, 58, 237, 0.15)'}`,
+                          fontSize: 'clamp(0.8rem, 2vw, 0.9rem)'
+                        }}>
+                          {exp.duration}
+                        </span>
+                      )}
+                      {exp.employmentType && (
+                        <span style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          background: isDarkMode ? 'rgba(15, 23, 42, 0.6)' : 'rgba(241, 245, 249, 0.9)',
+                          padding: '0.5rem 1rem',
+                          borderRadius: '9999px',
+                          color: isDarkMode ? '#94a3b8' : '#64748b',
+                          fontWeight: 500,
+                          border: `1px solid ${isDarkMode ? 'rgba(139, 92, 246, 0.2)' : 'rgba(124, 58, 237, 0.15)'}`,
+                          fontSize: 'clamp(0.8rem, 2vw, 0.9rem)'
+                        }}>
+                          {exp.employmentType}
+                        </span>
+                      )}
                     </div>
                   </div>
 
@@ -1619,6 +1844,36 @@ const Portfolio = () => {
                     {exp.description}
                   </p>
 
+                  {exp.skills && (
+                    <div style={{ marginBottom: '1.5rem', paddingLeft: '1rem' }}>
+                      <h4 style={{
+                        color: isDarkMode ? '#94a3b8' : '#64748b',
+                        fontSize: '0.8rem',
+                        fontWeight: 600,
+                        marginBottom: '0.6rem',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.06em'
+                      }}>
+                        Skills
+                      </h4>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
+                        {exp.skills.map((skill, i) => (
+                          <span key={i} style={{
+                            background: theme.chipBg,
+                            border: `1px solid ${theme.chipBorder}`,
+                            color: theme.chipText,
+                            padding: '0.3rem 0.75rem',
+                            borderRadius: '0.5rem',
+                            fontSize: '0.78rem',
+                            fontWeight: 500
+                          }}>
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   <h4 style={{
                     fontWeight: 600,
                     fontSize: 'clamp(1.05rem, 2.8vw, 1.25rem)',
@@ -1630,7 +1885,7 @@ const Portfolio = () => {
                     color: isDarkMode ? 'white' : '#1e293b'
                   }}>
                     <Star style={{ color: '#fbbf24', width: 20, height: 20 }} />
-                    Key Achievements
+                    {exp.type === 'field' ? 'Key Responsibilities' : 'Key Achievements'}
                   </h4>
 
                   <ul style={{ display: 'grid', gap: '0.875rem', paddingLeft: '1rem' }}>
@@ -1670,7 +1925,8 @@ const Portfolio = () => {
                     ))}
                   </ul>
                 </motion.div>
-              ))}
+                );
+              })}
             </motion.div>
           </div>
         </section>
@@ -1907,7 +2163,7 @@ const Portfolio = () => {
                 flexWrap: 'wrap'
               }}
             >
-              {['All Skills','Frontend', 'Backend', 'Database', 'DevOps', 'Architecture', 'Process', 'Testing'].map((cat) => (
+              {['All Skills','Frontend', 'Backend', 'Database', 'DevOps', 'Architecture', 'Process', 'Testing', 'Telecom'].map((cat) => (
                 <motion.button
                   key={cat}
                   whileHover={{ scale: 1.05 }}
